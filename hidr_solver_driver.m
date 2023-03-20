@@ -16,7 +16,8 @@ function hidr_solver_driver
 
     %% Solve system
     USE_PIVOTING=0;
-    [Q,p,dp]=hidr_solver(USE_PIVOTING);
+    SHOW_RESULTS=1;
+    [Q,p,dp]=hidr_solver(USE_PIVOTING,SHOW_RESULTS);
 
     return
 
