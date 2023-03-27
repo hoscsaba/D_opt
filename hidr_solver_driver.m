@@ -3,7 +3,8 @@ function hidr_solver_driver
 
     global wds
 
-    fname='systems/epanet_tutorial2.inp';
+    fname="/Users/hoscsaba/Oktatas/Projektek/2022_23_2/medencek2.inp";
+    %fname='systems/epanet_tutorial2.inp';
     %fname='systems/Net1.inp';
     %fname='systems/Anytown.inp';
     %fname='systems/d-town.inp';
@@ -19,20 +20,5 @@ function hidr_solver_driver
     SHOW_RESULTS=1;
     [Q,p,dp]=hidr_solver(USE_PIVOTING,SHOW_RESULTS);
 
-    return
-
-    % Nodes
-    N_n=7; % nodes
-    N_r=2; % rank-1 (end) nodes
-    nodes.h=zeros(1,N_n); nodes.h(end)=30;
-    cons_base=1; % m3/h
-    nodes.f=ones(N_n-N_r,1)*cons_base;
-
-    [Q,p,dp]=hidr_solver(edges,nodes);
-
 end
 
-function out = Hpump(Q)
-    a0=50; Q0=10; a2=a0/Q0^2;
-    out=a0-a2*Q^2;
-end

@@ -250,11 +250,15 @@ function s=load_epanet(fname,DEBUG_LEVEL)
             s.edges.is_pipe(i)=0;
         end
     end
-
+    
     if strcmp(s.options.Units,'LPS')
         for i=1:length(s.nodes)
             tmp=s.nodes.demand(i)/1000*3600;
             s.nodes.demand(i)=tmp;
+        end
+        for i=1:length(s.edges.pipe.diameter)
+            tmp=s.edges.pipe.diameter(i)/1000;
+            s.edges.pipe.diameter(i)=tmp;
         end
     end
 

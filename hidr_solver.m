@@ -12,7 +12,8 @@ wds.graph.Edges.Name=wds.edges.ID';
 %% Incidence matrix
 %% if s is the source node of edge j: I(s,j)=-1
 %% if t is the target node of edge j: I(t,j)= 1
-R=incidence(wds.graph);
+%% WARNING: Matlab's built-in incidence matrix will give different node order! 
+R=build_R();
 
 if USE_PIVOTING==1
     DO_PLOT=1;
@@ -68,7 +69,6 @@ global R f
 
 p=x(1:wds.N_j); % p: mwc
 Q=x(wds.N_j+1:end)'; % Q:m3/h
-
 %% 1...N_e: edge equations
 N_e=length(wds.edges.ID);
 for i=1:N_e
@@ -94,8 +94,9 @@ for i=1:N_e
         D=wds.edges.pipe.diameter(idx);
         A=D^2*pi/4;
         v=Q(i)/3600/A;
-        C=wds.edges.pipe.roughness(idx);
-        out(i,1)=ph+hh-pt-ht-h_friction(L,D,C,v);
+        C=wds.edges.pipe.roughness(idx); 
+        dh=h_friction(L,D,C,v);
+        out(i,1)=ph+hh-pt-ht-abs(dh)*sign(v);
     else
         wds.edges.type(i)
         error('Unknown edge type!')
@@ -107,7 +108,7 @@ end
 node_count=1;
 for i=1:length(wds.nodes.ID)
     if wds.nodes.type(i)==0
-        out(N_e+node_count)=dot(R(i,:),Q)-wds.nodes.demand(i);
+        out(N_e+node_count)=dot(R(:,i),Q)-wds.nodes.demand(i);
         node_count=node_count+1;
     end
 end
@@ -115,9 +116,9 @@ end
 
 function R=build_R()
 global wds
-R=zeros(length(wds.nodes.ID),length(wds.edges.ID));
-for i=1:length(wds.edges.node_id)
-    tmp=edges.node_id{i};
+R=zeros(length(wds.edges.ID),length(wds.nodes.ID));
+for i=1:length(wds.edges.ID)
+    tmp=wds.edges.node_idx{i};
     id_head=tmp(1); id_tail=tmp(2);
     R(i,id_head)=-1;
     R(i,id_tail)=1;
@@ -186,7 +187,13 @@ end
 function out=h_friction(L,D,C,v)
 global wds
 if strcmp(wds.options.Headloss,'H-W')
-    out=4.727*C^(-1.852)*D^(-4.871)*L;
+    % 1 m = 3.281 ft;
+    D_feet = D*3.281;
+    L_feet = L*3.281;
+    A=4.727*C^(-1.852)*D_feet^(-4.871)*L_feet;
+    B=1.852;
+    Q_cfs=(abs(v)*D^2*pi/4)*35.316;
+    out=A*Q_cfs^B/3.281;
 else
     error('Unknown Headloss formula!');
 end
