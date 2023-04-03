@@ -3,8 +3,8 @@ function hidr_solver_driver
 
     global wds USE_PIVOTING
 
-    %fname="/Users/hoscsaba/Oktatas/Projektek/2022_23_2/medencek2.inp";
-    fname='systems/epanet_tutorial2.inp';
+    fname="/Users/hoscsaba/Oktatas/Projektek/2022_23_2/medencek2.inp";
+    %fname='systems/epanet_tutorial2.inp';
     %fname='systems/pivot_sample.inp';
     %fname='systems/Net1.inp';
     %fname='systems/Anytown.inp';

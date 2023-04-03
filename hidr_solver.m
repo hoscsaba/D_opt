@@ -95,7 +95,8 @@ function [Q,p,dp]=hidr_solver(SHOW_RESULTS,DO_PLOT)
         end
         fprintf('\n\t Edges:');
         for i=1:wds.N_e
-            fprintf('\n\t\t %i, ID: %5s, Q=%+5.2e m3/h, dp=%5.2f mwc',i,wds.edges.ID{i},Q(i),dp(i));
+            fprintf('\n\t\t %i, ID: %5s, Q=%+5.3f m3/h = %+5.3f lps, dp=%5.2f mwc',...
+                i,wds.edges.ID{i},Q(i),Q(i)*1000/3600,dp(i));
         end
     end
 end
@@ -210,6 +211,7 @@ function Q = reconstruct_Q_vec(Qp);
         idx=idx+1;
     end
 end
+
 function h=get_h_p(idx)
     global wds
     if wds.nodes.type(idx)==0 % junction
