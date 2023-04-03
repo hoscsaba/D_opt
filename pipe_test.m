@@ -3,7 +3,7 @@ function pipe_test
 
     global wds USE_PIVOTING
 
-    fname="/Users/hoscsaba/Oktatas/Projektek/2022_23_2/medencek2.inp";
+    fname="systems/pipe_test.inp";
     
     %% Load system
     DEBUG_LEVEL=3;
