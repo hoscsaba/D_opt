@@ -3,30 +3,32 @@
 
 [JUNCTIONS]
 ;ID              	Elev        	Demand      	Pattern         
- j3               	100         	150         	                	;
- j4               	100         	150         	                	;
- j5               	100          	200         	                	;
- j6               	100         	150         	                	;
- j7               	100         	0           	                	;
+ n1               	0         	0         	                	;
+ n2               	0          	0         	                	;
+ n3               	0         	0         	                	;
+ n4               	0         	0           	                	;
+ n5                 0           0                                   ;
+
 
 [RESERVOIRS]
 ;ID              	Head        	Pattern         
- r1               	200         	                	;
+ rI               	0         	                	;
+ rII                20                              ;
 
 [TANKS]
 ;ID              	Elevation   	InitLevel   	MinLevel    	MaxLevel    	Diameter    	MinVol      	VolCurve
- t8               	150         	10          	0           	20          	50          	0           	                	;
+
 
 [PIPES]
 ;ID              	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
- p2               	j7               	t8               	1000        	12          	100         	0           	Open  	;
- p3               	r1               	j3               	1000        	12          	100         	0           	Open  	;
- p4               	j3               	j4               	5000        	8           	100         	0           	Open  	;
- p5               	j4               	j5               	5000        	6           	100         	0           	Open  	;
- p7               	j6               	j7               	500         	8           	100         	0           	Open  	;
- p8               	j3               	j7               	500         	12          	100         	0           	Open  	;
- p9               	j4               	j6               	5000        	8           	100         	0           	Open  	;
- p10              	j5               	j6               	7000        	6           	100         	0           	Open  	;
+p1               	n1               	n2               	1000        	1          	100         	0           	Open  	;
+p2                  n2                  n3                  1000            2               100             0               Open    ;
+p3                  n3                  n4                  1000            3               100             0               Open    ;
+pump4               rI                  n1                  1000            4               100             0               Open    ;
+p5                  n4                  rII                 1000            5               100             0               Open    ;
+p6                  n2                  n5                  1000            6               100             0               Open    ;
+p7                  n5                  n4                  1000            7               100             0               Open    ;
+p8                  n3                  n5                  1000            8               100             0               Open    ;
 
 [PUMPS]
 ;ID              	Node1           	Node2           	Parameters

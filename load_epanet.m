@@ -238,8 +238,8 @@ function s=load_epanet(fname,DEBUG_LEVEL)
 
     %% Locate indices of head and tail nodes
     for i=1:length(s.edges.ID)
-        head=find_node(s.edges.node_from_ID{i},s.nodes);
-        tail=find_node(s.edges.node_to_ID{i},s.nodes);
+        head=find_node(s.edges.node_from_ID{i},s.nodes,DEBUG_LEVEL);
+        tail=find_node(s.edges.node_to_ID{i},s.nodes,DEBUG_LEVEL);
         s.edges.node_idx{i}=[head tail];
     end
 
@@ -283,20 +283,25 @@ function s=load_epanet(fname,DEBUG_LEVEL)
     end
 end
 
-function out = find_node(ID,nodes)
+function out = find_node(ID,nodes,DEBUG_LEVEL)
     is_found=0;
-    %fprintf("\n");
+    if (DEBUG_LEVEL>3)
+    fprintf("\n");
+    end
     for i=1:length(nodes.ID)
-        %fprintf("\n\t %3s =? %3s",ID,nodes.ID{i});
+    if (DEBUG_LEVEL>3)
+        fprintf("\n\t %3s =? %3s",ID,nodes.ID{i});
+    end
         if strcmp(ID,nodes.ID{i})==1
             out=i;
             is_found=1;
-            %fprintf(" ! ");
+    if (DEBUG_LEVEL>3)
+            fprintf(" ! ");
+    end
             break
         end
     end
     if is_found==0
-        ID
-        error("Node not found!");
+        error("Node not found! Set DEBUG_LEVEL>3 for detailed info!");
     end
 end
