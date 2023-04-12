@@ -229,7 +229,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
                 fprintf("\n loading curves...");
             end
             cl=cl+1;
-            icp=1;
+            icp=1; c.ID={};
             while length(d{cl})>0
                 tmp=d{cl};
                 if strcmp(tmp(1),';')==0
@@ -242,43 +242,45 @@ function s=load_epanet(fname,DEBUG_LEVEL)
             end
 
             %% Build the curves
-            s.curves.ID=unique(c.ID);
-            for ic=1:length(s.curves.ID)
-                s.curves.x{ic}=[];
-                s.curves.y{ic}=[];
-            end
-            for ic=1:length(c.ID)
-                is_found=0;
-                for jc=1:length(s.curves.ID)
-                    %     c.ID(ic)
-                    %    s.curves.ID(jc)
-                    %   strcmp(s.curves.ID{jc},c.ID{ic})
-                    if strcmp(s.curves.ID{jc},c.ID{ic})==1
-                        s.curves.x{jc}=[s.curves.x{jc},c.x(ic)];
-                        s.curves.y{jc}=[s.curves.y{jc},c.y(ic)];
-                        is_found=1;
-                        break;
-                    end
+            if length(c.ID)>0
+                s.curves.ID=unique(c.ID);
+                for ic=1:length(s.curves.ID)
+                    s.curves.x{ic}=[];
+                    s.curves.y{ic}=[];
                 end
-                if is_found==0
-                    error('???');
+                for ic=1:length(c.ID)
+                    is_found=0;
+                    for jc=1:length(s.curves.ID)
+                        %     c.ID(ic)
+                        %    s.curves.ID(jc)
+                        %   strcmp(s.curves.ID{jc},c.ID{ic})
+                        if strcmp(s.curves.ID{jc},c.ID{ic})==1
+                            s.curves.x{jc}=[s.curves.x{jc},c.x(ic)];
+                            s.curves.y{jc}=[s.curves.y{jc},c.y(ic)];
+                            is_found=1;
+                            break;
+                        end
+                    end
+                    if is_found==0
+                        error('???');
+                    end
                 end
                 %    for i=1:length(s.curves.ID)
                 %s.curves.ID{i}
                 %s.curves.x{i}
                 %s.curves.y{i}
                 %    end
-            end
 
-            %% Single-point curve: add 133% of shutoff head and double the flow for zero head
-            for ic=1:length(s.curves.ID)
-                if length(s.curves.x{ic})==1
-                    tmpQ=s.curves.x{ic};
-                    tmpH=s.curves.y{ic};
-                    Qnom=tmpQ(1);
-                    Hnom=tmpH(1);
-                    s.curves.x{ic}=[0,         Qnom, 2*Qnom];
-                    s.curves.y{ic}=[1.33*Hnom, Hnom, 0];
+                %% Single-point curve: add 133% of shutoff head and double the flow for zero head
+                for ic=1:length(s.curves.ID)
+                    if length(s.curves.x{ic})==1
+                        tmpQ=s.curves.x{ic};
+                        tmpH=s.curves.y{ic};
+                        Qnom=tmpQ(1);
+                        Hnom=tmpH(1);
+                        s.curves.x{ic}=[0,         Qnom, 2*Qnom];
+                        s.curves.y{ic}=[1.33*Hnom, Hnom, 0];
+                    end
                 end
             end
             %% End of curve reading
@@ -311,16 +313,18 @@ function s=load_epanet(fname,DEBUG_LEVEL)
     end
 
     %% Add pump curve indices to pump objects
-    for ip=1:length(s.edges.pump.headcurve_ID)
-        tmp=find(s.edges.type==1,ip);
-        idx_of_ID=tmp(end);
-        idx=find(1==strcmp(s.edges.pump.headcurve_ID{ip},s.curves.ID));
-        if isempty(idx)
-            error('Cannor find pump head curve!!!');
+    if np>0 
+        for ip=1:length(s.edges.pump.headcurve_ID)
+            tmp=find(s.edges.type==1,ip);
+            idx_of_ID=tmp(end);
+            idx=find(1==strcmp(s.edges.pump.headcurve_ID{ip},s.curves.ID));
+            if isempty(idx)
+                error('Cannor find pump head curve!!!');
+            end
+            %fprintf("\n Searching for head curve of pump %s, whose ID is %s -> curve_ID(%d) is %s",...
+            %    s.edges.ID{idx_of_ID},s.edges.pump.headcurve_ID{ip},idx,s.curves.ID{idx});
+            s.edges.pump.headcurve_idx(ip)=idx;
         end
-        %fprintf("\n Searching for head curve of pump %s, whose ID is %s -> curve_ID(%d) is %s",...
-        %    s.edges.ID{idx_of_ID},s.edges.pump.headcurve_ID{ip},idx,s.curves.ID{idx});
-        s.edges.pump.headcurve_idx(ip)=idx;
     end
 
     %% Unit conversion, see Epanet doc "Units of Measurement" for more details
@@ -337,7 +341,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
         unit_system
         error('Unknown Unit system!');
     end
-    
+
     if unit_system==0
         %% Convert to m^3/h
         if strcmp(s.options.Units,'LPS'), mul=1/1000*3600; end
@@ -350,11 +354,13 @@ function s=load_epanet(fname,DEBUG_LEVEL)
         s.nodes.demand=convert_unit(s.nodes.demand,mul);
 
         % standard unit for diameter: m
-        s.edges.pipe.diameter=convert(s.edges.pipe.diameter,1/1000);
+        s.edges.pipe.diameter=convert_unit(s.edges.pipe.diameter,1/1000);
 
         % standard unit for pump flow rate: m3/h
-        for ic=1:length(s.curves.ID)
-            s.curves.x{ic}=convert_unit(s.curves.x{ic},mul);
+        if length(c.ID)>0
+            for ic=1:length(s.curves.ID)
+                s.curves.x{ic}=convert_unit(s.curves.x{ic},mul);
+            end
         end
     end
 
