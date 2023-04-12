@@ -41,7 +41,8 @@ function pivot_edge_id=find_pivot_flows(DO_PLOT)
 
     % Define pivot flows, use pipe with largest diameter
     pivot_edge_id=[];
-    D=wds.edges.pipe.diameter;
+    %D=wds.edges.pipe.diameter;
+    D=wds.edges.diameter;
     is_pipe=wds.edges.is_pipe;
     is_pivot=zeros(size(is_pipe));
 

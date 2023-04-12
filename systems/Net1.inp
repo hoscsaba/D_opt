@@ -25,22 +25,22 @@ wall reactions are included.
 
 [PIPES]
 ;ID              	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
- 10              	10              	11              	10530       	18          	100         	0           	Open  	;
- 11              	11              	12              	5280        	14          	100         	0           	Open  	;
- 12              	12              	13              	5280        	10          	100         	0           	Open  	;
- 21              	21              	22              	5280        	10          	100         	0           	Open  	;
- 22              	22              	23              	5280        	12          	100         	0           	Open  	;
- 31              	31              	32              	5280        	6           	100         	0           	Open  	;
- 110             	2               	12              	200         	18          	100         	0           	Open  	;
- 111             	11              	21              	5280        	10          	100         	0           	Open  	;
- 112             	12              	22              	5280        	12          	100         	0           	Open  	;
- 113             	13              	23              	5280        	8           	100         	0           	Open  	;
- 121             	21              	31              	5280        	8           	100         	0           	Open  	;
- 122             	22              	32              	5280        	6           	100         	0           	Open  	;
+ p10              	10              	11              	10530       	18          	100         	0           	Open  	;
+ p11              	11              	12              	5280        	14          	100         	0           	Open  	;
+ p12              	12              	13              	5280        	10          	100         	0           	Open  	;
+ p21              	21              	22              	5280        	10          	100         	0           	Open  	;
+ p22              	22              	23              	5280        	12          	100         	0           	Open  	;
+ p31              	31              	32              	5280        	6           	100         	0           	Open  	;
+ p110             	2               	12              	200         	18          	100         	0           	Open  	;
+ p111             	11              	21              	5280        	10          	100         	0           	Open  	;
+ p112             	12              	22              	5280        	12          	100         	0           	Open  	;
+ p113             	13              	23              	5280        	8           	100         	0           	Open  	;
+ p121             	21              	31              	5280        	8           	100         	0           	Open  	;
+ p122             	22              	32              	5280        	6           	100         	0           	Open  	;
 
 [PUMPS]
 ;ID              	Node1           	Node2           	Parameters
- 9               	9               	10              	HEAD 1	;
+ pump9               	9               	10              	HEAD 1	;
 
 [VALVES]
 ;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   

@@ -57,6 +57,8 @@ function [Q,p,dp]=hidr_solver(SHOW_RESULTS,DO_PLOT)
     end
 
     %% Solve system
+%    options = optimset('Display','iter');
+    %x=fsolve(@RHS,x,options);
     x=fsolve(@RHS,x);
 
     %% Recover pressures and flow rates
@@ -91,11 +93,11 @@ function [Q,p,dp]=hidr_solver(SHOW_RESULTS,DO_PLOT)
         fprintf('\nResults:');
         fprintf('\n\t Nodes:');
         for i=1:wds.N_j
-            fprintf('\n\t\t %i, ID: %5s, p=%5.2f mwc',i,wds.nodes.ID{i},p(i));
+            fprintf('\n\t\t %i, ID: %5s, p=%+5.2f mwc',i,wds.nodes.ID{i},p(i));
         end
         fprintf('\n\t Edges:');
         for i=1:wds.N_e
-            fprintf('\n\t\t %i, ID: %5s, Q=%+5.3f m3/h = %+5.3f lps, dp=%5.2f mwc',...
+            fprintf('\n\t\t %i, ID: %5s, Q=%+6.1f m3/h = %+5.1f lps, dp=%+5.2f mwc',...
                 i,wds.edges.ID{i},Q(i),Q(i)*1000/3600,dp(i));
         end
     end
@@ -143,6 +145,16 @@ function out = RHS(x)
             C=wds.edges.pipe.roughness(idx); 
             dh=h_friction(L,D,C,v);
             out(i,1)=ph+hh-pt-ht-abs(dh)*sign(v);
+        elseif wds.edges.type(i)==1 % pump
+            idx_p=wds.edges.type_idx(i);
+            idx_c=wds.edges.pump.headcurve_idx(idx_p);
+            Hpump=interp1(wds.curves.x{idx_c},wds.curves.y{idx_c},Q(i),'linear','extrap');
+            out(i,1)=ph+hh-pt-ht+Hpump;
+            %figure(1)
+            %xx=wds.curves.x{idx_c};
+            %yy=wds.curves.y{idx_c};
+            %plot(xx,yy,'r-x',Q(i),Hpump,'ro');
+            %drawnow
         else
             wds.edges.type(i)
             error('Unknown edge type!')
