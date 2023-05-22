@@ -34,46 +34,46 @@ Anytown network model
 
 [PIPES]
 ;ID              	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
- p2               	j20              	j70              	12000       	16          	70          	0           	OPEN  	;
- p4               	j20              	j30              	12000       	12          	120         	0           	OPEN  	;
- p6               	j20              	j110             	12000       	12          	70          	0           	OPEN  	;
- p8               	j70              	j30              	9000        	12          	70          	0           	OPEN  	;
- p10              	j70              	j100             	600         	12          	70          	0           	OPEN  	;
- p12              	j70              	j90              	600         	10          	70          	0           	OPEN  	;
- p14              	j70              	j60              	600         	12          	70          	0           	OPEN  	;
- p16              	j90              	j60              	600         	10          	70          	0           	OPEN  	;
- p18              	j60              	j80              	600         	12          	70          	0           	OPEN  	;
- p20              	j90              	j80              	600         	10          	70          	0           	OPEN  	;
- p22              	j90              	j150             	600         	10          	70          	0           	OPEN  	;
- p24              	j90              	j100             	600         	10          	70          	0           	OPEN  	;
- p26              	j100             	j150             	600         	12          	70          	0           	OPEN  	;
- p28              	j150             	j80              	600         	10          	70          	0           	OPEN  	;
- p30              	j60              	j30              	600         	10          	120         	0           	OPEN  	;
- p32              	j30              	j40              	600         	10          	120         	0           	OPEN  	;
- p34              	j30              	j50              	600         	10          	120         	0           	OPEN  	;
- p36              	j40              	j50              	600         	10          	120         	0           	OPEN  	;
- p38              	j50              	j80              	600         	10          	120         	0           	OPEN  	;
- p40              	j80              	j140             	600         	10          	120         	0           	OPEN  	;
- p42              	j150             	j140             	600         	8           	120         	0           	OPEN  	;
- p44              	j150             	j160             	600         	8           	120         	0           	OPEN  	;
- p46              	j100             	j160             	600         	8           	120         	0           	OPEN  	;
- p48              	j100             	j110             	600         	8           	70          	0           	OPEN  	;
- p50              	j110             	j160             	600         	10          	120         	0           	OPEN  	;
- p52              	j110             	j120             	600         	8           	120         	0           	OPEN  	;
- p54              	j120             	j160             	600         	12          	130         	0           	OPEN  	;
- p56              	j120             	j130             	600         	8           	120         	0           	OPEN  	;
- p58              	j130             	j160             	600         	10          	120         	0           	OPEN  	;
- p60              	j130             	j170             	600         	8           	120         	0           	OPEN  	;
- p62              	j160             	j140             	600         	8           	120         	0           	OPEN  	;
- p64              	j170             	j140             	12000       	8           	120         	0           	OPEN  	;
- p66              	j50              	j140             	12000       	8           	120         	0           	OPEN  	;
- p68              	j140             	j115             	6000        	12          	130         	0           	OPEN  	;
- p70              	j140             	j75              	6000        	12          	130         	0           	OPEN  	;
- p72              	j115             	j75              	6000        	12          	130         	0           	OPEN  	;
- p74              	j50              	j55              	6000        	12          	130         	0           	OPEN  	;
- p76              	j55              	j75              	6000        	12          	130         	0           	OPEN  	;
- p78              	j60              	r65              	100         	12          	120         	0           	OPEN  	;
- p80              	r165             	j160             	100         	12          	120         	0           	OPEN  	;
+ p2               	j20              	j70              	12000       	2          	70          	0           	OPEN  	;
+ p4               	j20              	j30              	12000       	4          	120         	0           	OPEN  	;
+ p6               	j20              	j110             	12000       	6          	70          	0           	OPEN  	;
+ p8               	j70              	j30              	9000        	8          	70          	0           	OPEN  	;
+ p10              	j70              	j100             	600         	10          	70          	0           	OPEN  	;
+ p12              	j70              	j90              	600         	12          	70          	0           	OPEN  	;
+ p14              	j70              	j60              	600         	14          	70          	0           	OPEN  	;
+ p16              	j90              	j60              	600         	16          	70          	0           	OPEN  	;
+ p18              	j60              	j80              	600         	18          	70          	0           	OPEN  	;
+ p20              	j90              	j80              	600         	20          	70          	0           	OPEN  	;
+ p22              	j90              	j150             	600         	22          	70          	0           	OPEN  	;
+ p24              	j90              	j100             	600         	24          	70          	0           	OPEN  	;
+ p26              	j100             	j150             	600         	26          	70          	0           	OPEN  	;
+ p28              	j150             	j80              	600         	28          	70          	0           	OPEN  	;
+ p30              	j60              	j30              	600         	30          	120         	0           	OPEN  	;
+ p32              	j30              	j40              	600         	32          	120         	0           	OPEN  	;
+ p34              	j30              	j50              	600         	34          	120         	0           	OPEN  	;
+ p36              	j40              	j50              	600         	36          	120         	0           	OPEN  	;
+ p38              	j50              	j80              	600         	38          	120         	0           	OPEN  	;
+ p40              	j80              	j140             	600         	40          	120         	0           	OPEN  	;
+ p42              	j150             	j140             	600         	42           	120         	0           	OPEN  	;
+ p44              	j150             	j160             	600         	44           	120         	0           	OPEN  	;
+ p46              	j100             	j160             	600         	46           	120         	0           	OPEN  	;
+ p48              	j100             	j110             	600         	48           	70          	0           	OPEN  	;
+ p50              	j110             	j160             	600         	50          	120         	0           	OPEN  	;
+ p52              	j110             	j120             	600         	52           	120         	0           	OPEN  	;
+ p54              	j120             	j160             	600         	54          	130         	0           	OPEN  	;
+ p56              	j120             	j130             	600         	56           	120         	0           	OPEN  	;
+ p58              	j130             	j160             	600         	58          	120         	0           	OPEN  	;
+ p60              	j130             	j170             	600         	60           	120         	0           	OPEN  	;
+ p62              	j160             	j140             	600         	62           	120         	0           	OPEN  	;
+ p64              	j170             	j140             	12000       	64           	120         	0           	OPEN  	;
+ p66              	j50              	j140             	12000       	66           	120         	0           	OPEN  	;
+ p68              	j140             	j115             	6000        	68         	130         	0           	OPEN  	;
+ p70              	j140             	j75              	6000        	70          	130         	0           	OPEN  	;
+ p72              	j115             	j75              	6000        	72          	130         	0           	OPEN  	;
+ p74              	j50              	j55              	6000        	74          	130         	0           	OPEN  	;
+ p76              	j55              	j75              	6000        	76          	130         	0           	OPEN  	;
+ p78              	j60              	r65              	100         	78          	120         	0           	OPEN  	;
+ p80              	r165             	j160             	100         	80          	120         	0           	OPEN  	;
 
 [PUMPS]
 ;ID              	Node1           	Node2           	Parameters
@@ -163,7 +163,7 @@ Anytown network model
  Page               	0
 
 [OPTIONS]
- Units              	GPM
+ Units              	CMH
  Headloss           	H-W
  Specific Gravity   	1.0
  Viscosity          	1.0

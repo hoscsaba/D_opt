@@ -1,7 +1,7 @@
 function [Q,p,dp]=hidr_solver(SHOW_RESULTS,DO_PLOT)
     global wds USE_PIVOTING
     global R D 
-    global piv_idx Rsinv_D Rsinv_Rp Np
+    global piv_idx Rsinv_D Rsinv_Rp Np epanet_edge_idx
 
     g=9.81; rho=1000;
 
@@ -47,17 +47,19 @@ function [Q,p,dp]=hidr_solver(SHOW_RESULTS,DO_PLOT)
             for i=1:Np
                 idx=wds.edges.type_idx(piv_idx(i));
                 fprintf("\n\t idx: %2d, ID: %s, D=%g, L=%g",piv_idx(i),wds.edges.ID{piv_idx(i)},...
-                    wds.edges.pipe.diameter(idx),wds.edges.pipe.L(idx));
+                    wds.edges.diameter(idx),wds.edges.pipe.L(idx));
             end
         end
-        split_R(piv_idx);
+        [Rp,Rs]=split_R(piv_idx);
+        Rsinv_D=inv(Rs)*D;
+        Rsinv_Rp=inv(Rs)*Rp;
         x=[ones(1,wds.N_j), ones(1,Np)];
     else
         x=[ones(1,wds.N_j), ones(1,length(wds.edges.ID))];
     end
 
     %% Solve system
-%    options = optimset('Display','iter');
+    %    options = optimset('Display','iter');
     %x=fsolve(@RHS,x,options);
     x=fsolve(@RHS,x);
 
@@ -139,7 +141,7 @@ function out = RHS(x)
         if wds.edges.type(i)==0 % pipe
             idx=wds.edges.type_idx(i);
             L=wds.edges.pipe.L(idx);
-            D=wds.edges.pipe.diameter(idx);
+            D=wds.edges.diameter(i);
             A=D^2*pi/4;
             v=Q(i)/3600/A;
             C=wds.edges.pipe.roughness(idx); 
@@ -155,6 +157,18 @@ function out = RHS(x)
             %yy=wds.curves.y{idx_c};
             %plot(xx,yy,'r-x',Q(i),Hpump,'ro');
             %drawnow
+        elseif wds.edges.type(i)==2 % TCV valve
+            L=wds.edges.pipe.L(idx);
+            D=wds.edges.diameter(i);
+            v=Q(i)/3600/A;
+            dh=0.01;
+            out(i,1)=ph+hh-pt-ht-dh;
+        elseif wds.edges.type(i)==3 % PRV valve
+            L=wds.edges.pipe.L(idx);
+            D=wds.edges.diameter(i);
+            v=Q(i)/3600/A;
+            dh=0.01;
+            out(i,1)=ph+hh-pt-ht-dh;
         else
             wds.edges.type(i)
             error('Unknown edge type!')
@@ -192,20 +206,27 @@ function build_R()
     D(find(wds.nodes.type~=0),:)=[];
 end
 
-function split_R(piv_idx)
-    global R D 
-    global Rsinv_D Rsinv_Rp
-    Rp=[]; Rs=[];
-    for i=1:length(R(1,:))
-        if sum(piv_idx==i)>0 
-            Rp=[Rp,R(:,i)];
-        else
-            Rs=[Rs,R(:,i)];
-        end
-    end
-    Rsinv_D=inv(Rs)*D;
-    Rsinv_Rp=inv(Rs)*Rp;
-end
+%function [Rp,Rs]=split_R(piv_idx)
+%    global R D wds 
+%global Rsinv_D Rsinv_Rp
+%    Rp=[]; Rs=[];
+%R
+%piv_idx
+%wds.edges.ID{piv_idx}
+%pause
+%    for i=1:length(R(1,:))
+%        if sum(piv_idx==i)>0 
+%            Rp=[Rp,R(:,i)];
+%        else
+%            Rs=[Rs,R(:,i)];
+%        end
+%    end
+%    Rs
+%    inv(Rs)
+%    pause
+%    Rsinv_D=inv(Rs)*D;
+%    Rsinv_Rp=inv(Rs)*Rp;
+%end
 
 function Q = reconstruct_Q_vec(Qp);
     global piv_idx Rsinv_D Rsinv_Rp
@@ -241,18 +262,92 @@ function h=get_h_p(idx)
     end
 end
 
-
 function out=h_friction(L,D,C,v)
-    global wds
-    if strcmp(wds.options.Headloss,'H-W')
-        % 1 m = 3.281 ft;
-        D_feet = D*3.281;
-        L_feet = L*3.281;
-        A=4.727*C^(-1.852)*D_feet^(-4.871)*L_feet;
-        B=1.852;
-        Q_cfs=(abs(v)*D^2*pi/4)*35.316;
-        out=A*Q_cfs^B/3.281;
-    else
-        error('Unknown Headloss formula!');
-    end
+global wds
+if strcmp(wds.options.Headloss,'H-W')
+% 1 m = 3.281 ft;
+D_feet = D*3.281;
+L_feet = L*3.281;
+A=4.727*C^(-1.852)*D_feet^(-4.871)*L_feet;
+B=1.852;
+Q_cfs=(abs(v)*D^2*pi/4)*35.316;
+out=A*Q_cfs^B/3.281;
+elseif strcmp(wds.options.Headloss,'C-M')
+% 1 m = 3.281 ft;
+D_feet = D*3.281;
+L_feet = L*3.281;
+A=4.66*C^(2)*D_feet^(-5.33)*L_feet;
+B=2;
+Q_cfs=(abs(v)*D^2*pi/4)*35.316;
+out=A*Q_cfs^B/3.281;
+elseif strcmp(wds.options.Headloss,'D-W')
+% 1 m = 3.281 ft;
+% Re=(abs(v)*D)/10^(-6);
+% D_feet = D*3.281;
+Q_cfs=(abs(v)*D^2*pi/4)*35.316;
+Re=(4*abs(Q_cfs))/(pi*D*10^(-6)); % nem jó a Re, vagy nem tudom
+if Re<4000
+F=64/Re;
+D_feet = D*3.281;
+L_feet = L*3.281;
+A=0.0252*F*D_feet^(-5)*L_feet;
+B=2;
+Q_cfs=(abs(v)*D^2*pi/4)*35.316;
+out=A*Q_cfs^B/3.281;
+else
+D_feet = D*3.281;
+L_feet = L*3.281;
+F=0.25/(log10(C/(3.7*D_feet)+5.74/Re^(0.9)))^2;
+A=0.0252*F*D_feet^(-5)*L_feet;
+B=2;
+Q_cfs=(abs(v)*D^2*pi/4)*35.316;
+out=A*Q_cfs^B/3.281;
 end
+else
+error('Unknown Headloss formula!');
+end
+end
+
+// OLD
+// function out=h_friction(L,D,n,v)
+// global wds
+// if strcmp(wds.options.Headloss,'H-W')
+//      % 1 m = 3.281 ft;
+//      D_feet = D*3.281;
+//     L_feet = L*3.281;
+//      A=4.727*n^(-1.852)*D_feet^(-4.871)*L_feet;
+//      B=1.852;
+//      Q_cfs=(abs(v)*D^2*pi/4)*35.316;
+//      out=A*Q_cfs^B/3.281;
+//  elseif strcmp(wds.options.Headloss,'C-M')
+//      % 1 m = 3.281 ft;
+//      D_feet = D*3.281;
+//      L_feet = L*3.281;
+//      A=4.66*n^(2)*D_feet^(-5.33)*L_feet;
+//      B=2;
+//      Q_cfs=(abs(v)*D^2*pi/4)*35.316;
+//     out=A*Q_cfs^B/3.281;
+// elseif strcmp(wds.options.Headloss,'D-W')
+//     % 1 m = 3.281 ft;
+//     Re=(abs(v)*D)/10^(-6);
+//     if Re<4000
+//         F=64/Re;
+//         D_feet = D*3.281;
+//         L_feet = L*3.281;
+//         A=0.0252*F*D_feet^(-5)*L_feet;
+//         B=2;
+//         Q_cfs=(abs(v)*D^2*pi/4)*35.316;
+//         out=A*Q_cfs^B/3.281;
+//     else
+//         D_feet = D*3.281;
+//         L_feet = L*3.281;
+//         F=0.25/(log10(n/(3.7*D_feet)+5.74/Re^(0.9)))^2;
+//         A=0.0252*F*D_feet^(-5)*L_feet;
+//         B=2;
+//         Q_cfs=(abs(v)*D^2*pi/4)*35.316;
+//         out=A*Q_cfs^B/3.281;
+//     end
+//  else
+//      error('Unknown Headloss formula!');
+//  end
+// end

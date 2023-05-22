@@ -55,14 +55,14 @@ function s=load_epanet(fname,DEBUG_LEVEL)
                 [tmp,strrem]=strtok(strrem);
                 s.edges.pipe.L(nl)=str2num(tmp);
                 [tmp,strrem]=strtok(strrem);
-                s.edges.pipe.diameter(edge_count)=str2num(tmp);
+                s.edges.diameter(edge_count)=str2num(tmp);
                 [tmp,strrem]=strtok(strrem);
                 s.edges.pipe.roughness(nl)=str2num(tmp);
                 if DEBUG_LEVEL>2
                     fprintf("\n\t #%2d: ID=%3s, nodes: %3s -> %3s, L=%5.0f m, D=%5.1f mm, r=%5.3f",...
                         nl,s.edges.ID{edge_count},...
                         s.edges.node_from_ID{edge_count},s.edges.node_to_ID{edge_count},...
-                        s.edges.pipe.L(nl),s.edges.pipe.diameter(edge_count),s.edges.pipe.roughness(nl));
+                        s.edges.pipe.L(nl),s.edges.diameter(edge_count),s.edges.pipe.roughness(nl));
                 end
                 cl=cl+1;
             end
@@ -139,7 +139,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
                 [tmp,strrem]  =strtok(strrem,';');
                 [tmp,strrem]  =strtok(tmp);
                 s.edges.pump.headcurve_ID{np}=strtrim(strrem);
-                if DEBUG_LEVEL>1
+                if DEBUG_LEVEL>2
                     fprintf("\n\t #%2d: ID=%3s, nodes= %3s -> %3s, headcurve_ID: HEAD %d",...
                         np,s.edges.ID{edge_count},...
                         s.edges.node_from_ID{edge_count},s.edges.node_to_ID{edge_count},...
@@ -241,6 +241,9 @@ function s=load_epanet(fname,DEBUG_LEVEL)
                 cl=cl+1;
             end
 
+            if DEBUG_LEVEL>1
+                fprintf("\n building curves...");
+            end
             %% Build the curves
             if length(c.ID)>0
                 s.curves.ID=unique(c.ID);
@@ -297,6 +300,9 @@ function s=load_epanet(fname,DEBUG_LEVEL)
         end
     end
 
+    if DEBUG_LEVEL>1
+        fprintf("\n building system, locating head and tail nodes for edges...");
+    end
     %% Locate indices of head and tail nodes
     for i=1:length(s.edges.ID)
         head=find_node(s.edges.node_from_ID{i},s.nodes,DEBUG_LEVEL);
@@ -312,7 +318,10 @@ function s=load_epanet(fname,DEBUG_LEVEL)
         end
     end
 
-    %% Add pump curve indices to pump objects
+    %% Add pump curve indices to pump objectss
+    if DEBUG_LEVEL>1
+        fprintf("\n adding curves to pumps...");
+    end
     if np>0 
         for ip=1:length(s.edges.pump.headcurve_ID)
             tmp=find(s.edges.type==1,ip);
@@ -330,6 +339,9 @@ function s=load_epanet(fname,DEBUG_LEVEL)
     %% Unit conversion, see Epanet doc "Units of Measurement" for more details
     % if Units = 'LPS' | 'LPM' | 'MLD'| 'CMH' | 'CMD' -> SI
     % if Units = 'CFS' | 'GPM' | 'MGD' | 'IMGD' | 'AFD'
+    if DEBUG_LEVEL>1
+        fprintf("\n converting units ...");
+    end
     unit_system=-1; 
     if sum(strcmp(s.options.Units,{'LPS', 'LPM', 'MLD', 'CMH' , 'CMD'}))>0
         unit_system=0;
@@ -354,7 +366,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
         s.nodes.demand=convert_unit(s.nodes.demand,mul);
 
         % standard unit for diameter: m
-        s.edges.pipe.diameter=convert_unit(s.edges.pipe.diameter,1/1000);
+        s.edges.diameter=convert_unit(s.edges.diameter,1/1000);
 
         % standard unit for pump flow rate: m3/h
         if length(c.ID)>0
@@ -388,7 +400,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
         end
 
         % standard unit for pipe diameter: in -> m
-        s.edges.pipe.diameter=convert_unit(s.edges.pipe.diameter,in_to_m);
+        s.edges.diameter=convert_unit(s.edges.diameter,in_to_m);
 
         % standard unit for tank diameter: ft -> m
         if nt>0
@@ -452,6 +464,7 @@ function out = find_node(ID,nodes,DEBUG_LEVEL)
         end
     end
     if is_found==0
+        fprintf("\n\n ID:%s",ID);
         error("Node not found! Set DEBUG_LEVEL>3 for detailed info!");
     end
 end
