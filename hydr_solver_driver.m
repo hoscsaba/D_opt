@@ -9,10 +9,10 @@ function hydr_solver_driver
 	%fname='systems/pivot_sample.inp';
 	%fname='systems/Net1.inp';
 	%fname='systems/Anytown_mod.inp';
-%fname='systems/Anytown.inp';
+fname='systems/Anytown.inp';
 	%fname='systems/d-town.inp';
 	%fname='systems/MICROPOLIS_v1.inp';
-	fname='systems/PacificCity.inp';
+	%fname='systems/PacificCity.inp';
 	%fname='systems/Hanoi.inp';
 	%% Load systems
 	DEBUG_LEVEL=3;

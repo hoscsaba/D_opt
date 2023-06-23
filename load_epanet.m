@@ -148,6 +148,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
 				cl=cl+1;
 			end
 
+%<<<<<<< Updated upstream
 		elseif contains(d{cl},"[VALVES]")
 			if DEBUG_LEVEL>1
 				fprintf("\n loading valves...");
@@ -162,6 +163,19 @@ function s=load_epanet(fname,DEBUG_LEVEL)
 				[tmp_type,strrem]  =strtok(strrem);
 				[tmp,strrem]  =strtok(strrem);
 				tmp_setting=str2num(tmp);
+% =======
+%                 [tmp,strrem]  =strtok(strrem,';');
+%                 [tmp,strrem]  =strtok(tmp);
+%                 s.edges.pump.headcurve_ID{np}=strtrim(strrem);
+%                 if DEBUG_LEVEL>2
+%                     fprintf("\n\t #%2d: ID=%3s, nodes= %3s -> %3s, headcurve_ID: HEAD %s",...
+%                         np,s.edges.ID{edge_count},...
+%                         s.edges.node_from_ID{edge_count},s.edges.node_to_ID{edge_count},...
+%                         s.edges.pump.headcurve_ID{np});
+%                 end
+%                 cl=cl+1;
+%             end
+% >>>>>>> Stashed changes
 
 				if strcmp(tmp_type,'TCV')
 					nv=nv+1;
@@ -244,6 +258,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
 				cl=cl+1;
 			end
 
+%<<<<<<< Updated upstream
 			if DEBUG_LEVEL>1
 				fprintf("\n building curves...");
 			end
@@ -276,6 +291,44 @@ function s=load_epanet(fname,DEBUG_LEVEL)
 				%s.curves.x{i}
 				%s.curves.y{i}
 				%    end
+% =======
+%             if DEBUG_LEVEL>1
+%                 fprintf("\n building curves...");
+%             end
+%             %% Build the curves
+%             if length(c.ID)>0
+%                 s.curves.ID=unique(c.ID);
+%                 for ic=1:length(s.curves.ID)
+%                     s.curves.x{ic}=[];
+%                     s.curves.y{ic}=[];
+%                 end
+%                 for ic=1:length(c.ID)
+%                     is_found=0;
+%                     for jc=1:length(s.curves.ID)
+%                         %     c.ID(ic)
+%                         %    s.curves.ID(jc)
+%                         %   strcmp(s.curves.ID{jc},c.ID{ic})
+%                         if strcmp(s.curves.ID{jc},c.ID{ic})==1
+%                             s.curves.x{jc}=[s.curves.x{jc},c.x(ic)];
+%                             s.curves.y{jc}=[s.curves.y{jc},c.y(ic)];
+%                             is_found=1;
+%                             break;
+%                         end
+%                     end
+%                     if is_found==0
+%                         error('???');
+%                     end
+%                 end
+%                 if DEBUG_LEVEL>4
+%                    for i=1:length(s.curves.ID)
+%                 fprintf('\n\t curve ID: %s',s.curves.ID{i});
+%                 fprintf('\n\t\t data x:');
+%                 disp(s.curves.x{i})
+%                 fprintf('\n\t\t data y:');
+%                 disp(s.curves.y{i})
+%                     end
+%                 end
+% >>>>>>> Stashed changes
 
 				%% Single-point curve: add 133% of shutoff head and double the flow for zero head
 				for ic=1:length(s.curves.ID)
@@ -296,12 +349,21 @@ function s=load_epanet(fname,DEBUG_LEVEL)
 	end
 
 
+%<<<<<<< Updated upstream
 	if DEBUG_LEVEL>4
 		for i=1:length(s.edges.ID)
 			fprintf('\n\t edge #%2d: ID: %6s, type: %d, nodes: %5s -> %5s',...
 				i,s.edges.ID{i},s.edges.type(i),s.edges.node_from_ID{i},s.edges.node_to_ID{i});
 		end
 	end
+%=======
+%     if DEBUG_LEVEL>4
+%         for i=1:length(s.edges.ID)
+%             fprintf('\n\t edge #%2d: ID: %6s, type: %d, nodes: %5s -> %5s',...
+%                 i,s.edges.ID{i},s.edges.type(i),s.edges.node_from_ID{i},s.edges.node_to_ID{i});
+%         end
+%     end
+%>>>>>>> Stashed changes
 
 	if DEBUG_LEVEL>1
 		fprintf("\n building system, locating head and tail nodes for edges...");
