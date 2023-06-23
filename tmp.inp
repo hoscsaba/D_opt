@@ -1,0 +1,145 @@
+[TITLE]
+
+[JUNCTIONS]
+ j1                                    0.0000
+ j2                                    0.0000
+ j3                                    0.0000
+ j4                                    0.0000
+ j5                                    0.0000
+
+[RESERVOIRS]
+ rI                                    0.0000                                
+ rII                                  30.0000                                
+
+[TANKS]
+
+[PIPES]
+ p1                              j1                              j2                                 1000.0000      10.0000     100.0000       0.0000       
+ p2                              j2                              j3                                 1000.0000      10.0000     100.0000       0.0000       
+ p3                              j3                              j4                                 1000.0000     100.0000     100.0000       0.0000       
+ p6                              j2                              j5                                 1000.0000      50.0000     100.0000       0.0000       
+ p7                              j5                              j4                                 1000.0000      50.0000     100.0000       0.0000       
+ p8                              j3                              j5                                 1000.0000     100.0000     100.0000       0.0000       
+ p5                              j4                              rII                                1000.0000     100.0000     100.0000       0.0000       
+
+[PUMPS]
+ pump4                           rI                              j1                               HEAD 1
+
+[VALVES]
+
+[DEMANDS]
+ j1                                    0.000000                                
+ j2                                    0.000000                                
+ j3                                    0.000000                                
+ j4                                    0.000000                                
+ j5                                    5.000000                                
+
+[EMITTERS]
+
+[STATUS]
+
+[PATTERNS]
+
+[CURVES]
+;PUMP: PUMP: Pump curve
+ 1                                    30.0000      50.0000
+;PUMP: 
+ 2                                    30.0000      50.0000
+
+[CONTROLS]
+
+[RULES]
+
+[QUALITY]
+
+[SOURCES]
+
+[MIXING]
+
+[REACTIONS]
+ ORDER  BULK            1.00
+ ORDER  WALL            1
+ ORDER  TANK            1.00
+ GLOBAL BULK            0.000000
+ GLOBAL WALL            0.000000
+
+[ENERGY]
+ GLOBAL EFFIC        75.0000
+ DEMAND CHARGE       0.0000
+
+[TIMES]
+ DURATION            0:00:00
+ HYDRAULIC TIMESTEP  0:00:01
+ QUALITY TIMESTEP    0:00:01
+ REPORT TIMESTEP     1:00:00
+ REPORT START        0:00:00
+ PATTERN TIMESTEP    1:00:00
+ PATTERN START       0:00:00
+ RULE TIMESTEP       0:06:00
+ START CLOCKTIME     0:00:00
+ STATISTIC           NONE
+
+[OPTIONS]
+ UNITS               CMH
+ PRESSURE            METERS
+ HEADLOSS            H-W
+ UNBALANCED          CONTINUE 10
+ QUALITY             NONE
+ DEMAND MULTIPLIER   1.0000
+ EMITTER EXPONENT    0.5000
+ VISCOSITY           1.000000
+ DIFFUSIVITY         1.000000
+ SPECIFIC GRAVITY    1.000000
+ TRIALS              40
+ ACCURACY            0.00100000
+ TOLERANCE           0.01000000
+ CHECKFREQ           2
+ MAXCHECK            10
+ DAMPLIMIT           0.00000000
+
+[REPORT]
+ PAGESIZE            0
+ STATUS              NO
+ SUMMARY             NO
+ ENERGY              NO
+ MESSAGES            YES
+ NODES               NONE
+ LINKS               NONE
+ Elevation           NO
+ Demand              PRECISION 2
+ Head                PRECISION 2
+ Pressure            PRECISION 2
+ Quality             NO
+ Length              NO
+ Diameter            NO
+ Flow                PRECISION 2
+ Velocity            PRECISION 2
+ Headloss            PRECISION 2
+ Quality             NO
+ State               NO
+ Setting             NO
+ Reaction            NO
+
+[COORDINATES]
+ j1                                 -383.478000    7257.376000
+ j2                                  363.721000    7270.485000
+ j3                                 1549.610000    7848.384000
+ j4                                 2433.014000    7181.484000
+ j5                                 1498.495000    6410.134000
+ rI                                -1038.057000    7263.069000
+ rII                                2967.025000    7188.900000
+
+[VERTICES]
+
+[TAGS]
+
+[LABELS]
+;X-Coord             Y-Coord             Label & Anchor Node
+
+[BACKDROP]
+  DIMENSIONS  	0.000             	0.000             	10000.000         	10000.000         
+ UNITS          	None
+ FILE           	
+ OFFSET         	0.00            	0.00            
+
+[END]

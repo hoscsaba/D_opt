@@ -53,7 +53,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
                 [s.edges.node_to_ID{edge_count},strrem]  =strtok(strrem);
 
                 [tmp,strrem]=strtok(strrem);
-                s.edges.pipe.L(nl)=str2num(tmp);
+                s.edges.length(edge_count)=str2num(tmp);
                 [tmp,strrem]=strtok(strrem);
                 s.edges.diameter(edge_count)=str2num(tmp);
                 [tmp,strrem]=strtok(strrem);
@@ -62,7 +62,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
                     fprintf("\n\t #%2d: ID=%3s, nodes: %3s -> %3s, L=%5.0f m, D=%5.1f mm, r=%5.3f",...
                         nl,s.edges.ID{edge_count},...
                         s.edges.node_from_ID{edge_count},s.edges.node_to_ID{edge_count},...
-                        s.edges.pipe.L(nl),s.edges.diameter(edge_count),s.edges.pipe.roughness(nl));
+                        s.edgeslength(edge_count),s.edges.diameter(edge_count),s.edges.pipe.roughness(nl));
                 end
                 cl=cl+1;
             end
@@ -135,7 +135,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
                 [s.edges.node_from_ID{edge_count},strrem]=strtok(strrem);
                 [s.edges.node_to_ID{edge_count},strrem]  =strtok(strrem);
                 s.edges.diameter(edge_count)=1.e-6; % Artificial diameter, all edges must have
-
+s.edges.length(edge_count)=1;
                 [tmp,strrem]  =strtok(strrem,';');
                 [tmp,strrem]  =strtok(tmp);
                 s.edges.pump.headcurve_ID{np}=strtrim(strrem);
@@ -162,6 +162,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
                 [tmp_type,strrem]  =strtok(strrem);
                 [tmp,strrem]  =strtok(strrem);
                 tmp_setting=str2num(tmp);
+               
                 if strcmp(tmp_type,'TCV')
                     nv=nv+1;
                     edge_count=edge_count+1;
@@ -171,6 +172,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
                     s.edges.node_from_ID{edge_count}=tmp_node_from_ID;
                     s.edges.node_to_ID{edge_count}=tmp_node_to_ID;
                     s.edges.diameter(edge_count)=tmp_diameter;
+                      s.edges.length(edge_count)=1;
 
                     s.edges.valve.type{nv}=tmp_type;
                     s.edges.valve.setting(nv)=tmp_setting;
@@ -190,6 +192,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
                     s.edges.node_from_ID{edge_count}=tmp_node_from_ID;
                     s.edges.node_to_ID{edge_count}=tmp_node_to_ID;
                     s.edges.diameter(edge_count)=tmp_diameter;
+  s.edges.length(edge_count)=1;
 
                     s.edges.valve.type{nv}=tmp_type;
                     s.edges.valve.setting(nv)=tmp_setting;
@@ -401,6 +404,8 @@ function s=load_epanet(fname,DEBUG_LEVEL)
 
         % standard unit for pipe diameter: in -> m
         s.edges.diameter=convert_unit(s.edges.diameter,in_to_m);
+         % standard unit for length: ft -> m
+        s.edges.length=convert_unit(s.edges.length,ft_to_m);
 
         % standard unit for tank diameter: ft -> m
         if nt>0
@@ -419,8 +424,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
             s.nodes.reservoir.H=convert_unit(s.nodes.reservoir.H,in_to_m);
         end
 
-        % standard unit for length: ft -> m
-        s.edges.pipe.L=convert_unit(s.edges.pipe.L,ft_to_m);
+       
     end
 
     s.N_j=nj; % # of junctions

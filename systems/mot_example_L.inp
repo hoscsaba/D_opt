@@ -1,0 +1,345 @@
+[TITLE]
+
+
+[JUNCTIONS]
+;ID              	Elev        	Demand      	Pattern         
+ j1              	0           	0           	                	;
+ j2              	0           	0           	                	;
+ j3              	0           	5           	                	;
+ j4              	0           	5           	                	;
+ j5              	0           	5           	                	;
+ 1               	0           	0           	                	;
+ 2               	0           	0           	                	;
+ 3               	0           	0           	                	;
+ 4               	0           	0           	                	;
+ 5               	0           	0           	                	;
+ 6               	0           	0           	                	;
+ 7               	0           	0           	                	;
+ 8               	0           	0           	                	;
+ 9               	0           	0           	                	;
+ 10              	0           	0           	                	;
+ 11              	0           	0           	                	;
+ 12              	0           	0           	                	;
+ 13              	0           	0           	                	;
+ 14              	0           	0           	                	;
+ 15              	0           	0           	                	;
+ 16              	0           	0           	                	;
+ 17              	0           	0           	                	;
+ 18              	0           	0           	                	;
+ 19              	0           	0           	                	;
+ 20              	0           	0           	                	;
+ 21              	0           	0           	                	;
+ 22              	0           	0           	                	;
+ 23              	0           	0           	                	;
+ 24              	0           	0           	                	;
+ 25              	0           	0           	                	;
+ 26              	0           	0           	                	;
+ 27              	0           	0           	                	;
+ 28              	0           	0           	                	;
+ 29              	0           	0           	                	;
+ 30              	0           	0           	                	;
+ 31              	0           	0           	                	;
+ 32              	0           	0           	                	;
+ 33              	0           	0           	                	;
+ 34              	0           	0           	                	;
+ 35              	0           	0           	                	;
+ 36              	0           	0           	                	;
+ 37              	0           	0           	                	;
+ 38              	0           	0           	                	;
+ 39              	0           	0           	                	;
+ 40              	0           	0           	                	;
+ 41              	0           	0           	                	;
+ 42              	0           	0           	                	;
+ 43              	0           	0           	                	;
+ 44              	0           	0           	                	;
+ 45              	0           	0           	                	;
+ 46              	0           	0           	                	;
+ 47              	0           	0           	                	;
+ 48              	0           	0           	                	;
+ 49              	0           	0           	                	;
+ 50              	0           	0           	                	;
+ 51              	0           	0           	                	;
+ 52              	0           	0           	                	;
+ 53              	0           	0           	                	;
+ 54              	0           	0           	                	;
+ 55              	0           	0           	                	;
+ 56              	0           	0           	                	;
+ 57              	0           	0           	                	;
+ 58              	0           	0           	                	;
+ 59              	0           	0           	                	;
+ 60              	0           	0           	                	;
+ 61              	0           	0           	                	;
+ 62              	0           	0           	                	;
+ 63              	0           	0           	                	;
+ 64              	0           	0           	                	;
+ 65              	0           	0           	                	;
+
+[RESERVOIRS]
+;ID              	Head        	Pattern         
+ rI              	0           	                	;
+ rII             	30          	                	;
+
+[TANKS]
+;ID              	Elevation   	InitLevel   	MinLevel    	MaxLevel    	Diameter    	MinVol      	VolCurve        	Overflow
+
+[PIPES]
+;ID              	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
+ p1              	j1              	j2              	1000        	100         	100         	0           	Open  	;
+ p5              	j4              	rII             	1000        	1.0         	100         	0           	Open  	;
+ l2d1            	j2              	1               	1000        	100          	100         	0           	Open  	;
+ l2d2            	1               	2               	1000        	100          	100         	0           	Open  	;
+ l2d3            	2               	3               	1000        	100          	100         	0           	Open  	;
+ l2d4            	3               	4               	1000        	100          	100         	0           	Open  	;
+ l2d5            	4               	5               	1000        	100          	100         	0           	Open  	;
+ l2d6            	5               	6               	1000        	100          	100         	0           	Open  	;
+ l2d7            	6               	7               	1000        	100          	100         	0           	Open  	;
+ l2d8            	7               	8               	1000        	100          	100         	0           	Open  	;
+ l2d9            	8               	9               	1000        	100          	100         	0           	Open  	;
+ l2d10           	9               	10              	1000        	100          	100         	0           	Open  	;
+ l2d11           	10              	11              	1000        	100          	100         	0           	Open  	;
+ l2d12           	11              	12              	1000        	100          	100         	0           	Open  	;
+ l2d13           	12              	13              	1000        	100          	100         	0           	Open  	;
+ l2d14           	13              	j3              	1000        	100          	100         	0           	Open  	;
+ l3d2            	14              	15              	1000        	100          	100         	0           	Open  	;
+ l3d3            	15              	16              	1000        	100          	100         	0           	Open  	;
+ l3d4            	16              	17              	1000        	100          	100         	0           	Open  	;
+ l3d5            	17              	18              	1000        	100          	100         	0           	Open  	;
+ l3d6            	18              	19              	1000        	100          	100         	0           	Open  	;
+ l3d7            	19              	20              	1000        	100          	100         	0           	Open  	;
+ l3d8            	20              	21              	1000        	100          	100         	0           	Open  	;
+ l3d9            	21              	22              	1000        	100          	100         	0           	Open  	;
+ l3d10           	22              	23              	1000        	100          	100         	0           	Open  	;
+ l3d11           	23              	24              	1000        	100          	100         	0           	Open  	;
+ l3d12           	24              	25              	1000        	100          	100         	0           	Open  	;
+ l3d13           	25              	26              	1000        	100          	100         	0           	Open  	;
+ l3d14           	26              	j4              	1000        	100          	100         	0           	Open  	;
+ l7d14           	j4              	27              	1000        	100          	100         	0           	Open  	;
+ l7d13           	27              	28              	1000        	100          	100         	0           	Open  	;
+ l7d12           	28              	29              	1000        	100          	100         	0           	Open  	;
+ l7d11           	29              	30              	1000        	100         	100         	0           	Open  	;
+ l7d10           	30              	31              	1000        	100          	100         	0           	Open  	;
+ l7d9            	31              	32              	1000        	100          	100         	0           	Open  	;
+ l7d8            	32              	33              	1000        	100         	100         	0           	Open  	;
+ l7d7            	33              	34              	1000        	100          	100         	0           	Open  	;
+ l7d6            	34              	35              	1000        	100          	100         	0           	Open  	;
+ l7d5            	35              	36              	1000        	100          	100         	0           	Open  	;
+ l7d4            	36              	37              	1000        	100          	100         	0           	Open  	;
+ l7d3            	37              	38              	1000        	100          	100         	0           	Open  	;
+ l7d2            	38              	39              	1000        	100          	100         	0           	Open  	;
+ l7d1            	39              	j5              	1000        	100          	100         	0           	Open  	;
+ l8d1            	j3              	52              	1000        	100          	100         	0           	Open  	;
+ l8d2            	52              	51              	1000        	100          	100         	0           	Open  	;
+ l8d3            	51              	50              	1000        	100          	100         	0           	Open  	;
+ l8d4            	50              	49              	1000        	100          	100         	0           	Open  	;
+ l8d5            	49              	48              	1000        	100          	100         	0           	Open  	;
+ l8d6            	48              	47              	1000        	100          	100         	0           	Open  	;
+ l8d7            	47              	46              	1000        	100          	100         	0           	Open  	;
+ l8d8            	46              	45              	1000        	100          	100         	0           	Open  	;
+ l8d9            	45              	44              	1000        	100          	100         	0           	Open  	;
+ l8d10           	44              	43              	1000        	100          	100         	0           	Open  	;
+ l8d11           	43              	42              	1000        	100          	100         	0           	Open  	;
+ l8d12           	42              	41              	1000        	100          	100         	0           	Open  	;
+ l8d13           	41              	40              	1000        	100          	100         	0           	Open  	;
+ l8d14           	40              	j5              	1000        	100          	100         	0           	Open  	;
+ l6d1            	j2              	53              	1000        	100          	100         	0           	Open  	;
+ l6d2            	53              	54              	1000        	100          	100         	0           	Open  	;
+ l6d3            	54              	55              	1000        	100          	100         	0           	Open  	;
+ l6d4            	55              	56              	1000        	100          	100         	0           	Open  	;
+ l6d5            	56              	57              	1000        	100          	100         	0           	Open  	;
+ l6d6            	57              	58              	1000        	100          	100         	0           	Open  	;
+ l6d7            	58              	59              	1000        	100          	100         	0           	Open  	;
+ l6d8            	59              	60              	1000        	100          	100         	0           	Open  	;
+ l6d9            	60              	61              	1000        	100          	100         	0           	Open  	;
+ l6d10           	61              	62              	1000        	100          	100         	0           	Open  	;
+ l6d11           	62              	63              	1000        	100          	100         	0           	Open  	;
+ l6d12           	63              	64              	1000        	100          	100         	0           	Open  	;
+ l6d13           	64              	65              	1000        	100          	100         	0           	Open  	;
+ l6d14           	65              	j5              	1000        	100          	100         	0           	Open  	;
+ l3d1            	j3              	14              	1000        	100          	100         	0           	Open  	;
+
+[PUMPS]
+;ID              	Node1           	Node2           	Parameters
+ pump4           	rI              	j1              	HEAD 1	;
+
+[VALVES]
+;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
+
+[TAGS]
+
+[DEMANDS]
+;Junction        	Demand      	Pattern         	Category
+
+[STATUS]
+;ID              	Status/Setting
+
+[PATTERNS]
+;ID              	Multipliers
+
+[CURVES]
+;ID              	X-Value     	Y-Value
+;PUMP: PUMP: PUMP: Pump curve
+ 1               	30          	50          
+;PUMP: PUMP: 
+ 2               	30          	50          
+
+[CONTROLS]
+
+
+
+[RULES]
+
+
+
+[ENERGY]
+ Global Efficiency  	75
+ Global Price       	0
+ Demand Charge      	0
+
+[EMITTERS]
+;Junction        	Coefficient
+
+[QUALITY]
+;Node            	InitQual
+
+[SOURCES]
+;Node            	Type        	Quality     	Pattern
+
+[REACTIONS]
+;Type     	Pipe/Tank       	Coefficient
+
+
+[REACTIONS]
+ Order Bulk            	1
+ Order Tank            	1
+ Order Wall            	1
+ Global Bulk           	0
+ Global Wall           	0
+ Limiting Potential    	0
+ Roughness Correlation 	0
+
+[MIXING]
+;Tank            	Model
+
+[TIMES]
+ Duration           	0:00 
+ Hydraulic Timestep 	1:00 
+ Quality Timestep   	0:05 
+ Pattern Timestep   	1:00 
+ Pattern Start      	0:00 
+ Report Timestep    	1:00 
+ Report Start       	0:00 
+ Start ClockTime    	12 am
+ Statistic          	NONE
+
+[REPORT]
+ Status             	No
+ Summary            	No
+ Page               	0
+
+[OPTIONS]
+ Units              	CMH
+ Headloss           	H-W
+ Specific Gravity   	1
+ Viscosity          	1
+ Trials             	40
+ Accuracy           	0.001
+ CHECKFREQ          	2
+ MAXCHECK           	10
+ DAMPLIMIT          	0
+ Unbalanced         	Continue 10
+ Pattern            	1
+ Demand Multiplier  	1.0
+ Emitter Exponent   	0.5
+ Quality            	None mg/L
+ Diffusivity        	1
+ Tolerance          	0.01
+
+[COORDINATES]
+;Node            	X-Coord           	Y-Coord
+j1              	-383.478          	7257.376          
+j2              	363.721           	7270.485          
+j3              	1549.610          	7848.384          
+j4              	2433.014          	7181.484          
+j5              	1498.495          	6410.134          
+1               	432.185           	7321.894          
+2               	511.203           	7371.280          
+3               	609.975           	7433.836          
+4               	698.871           	7483.222          
+5               	784.473           	7555.655          
+6               	893.123           	7595.164          
+7               	975.433           	7641.258          
+8               	1077.498          	7674.182          
+9               	1156.516          	7713.691          
+10              	1238.826          	7759.785          
+11              	1334.306          	7782.832          
+12              	1406.739          	7809.171          
+13              	1462.710          	7825.633          
+14              	1587.822          	7828.926          
+15              	1633.916          	7792.709          
+16              	1693.179          	7749.908          
+17              	1742.565          	7700.522          
+18              	1798.536          	7654.428          
+19              	1854.507          	7595.164          
+20              	1936.818          	7549.071          
+21              	1999.373          	7486.515          
+22              	2068.514          	7450.298          
+23              	2134.362          	7384.450          
+24              	2196.918          	7312.017          
+25              	2275.936          	7275.800          
+26              	2348.369          	7232.999          
+27              	2394.463          	7111.180          
+28              	2351.662          	7071.671          
+29              	2312.153          	7032.162          
+30              	2272.644          	6989.360          
+31              	2233.135          	6939.974          
+32              	2196.918          	6903.758          
+33              	2154.117          	6860.956          
+34              	2111.316          	6834.617          
+35              	2065.222          	6778.646          
+36              	2005.958          	6735.845          
+37              	1963.157          	6669.996          
+38              	1897.309          	6630.487          
+39              	1847.923          	6584.394          
+40              	1502.219          	6462.574          
+41              	1502.219          	6561.347          
+42              	1505.512          	6669.996          
+43              	1508.804          	6745.722          
+44              	1505.512          	6844.494          
+45              	1498.927          	6946.559          
+46              	1495.634          	7025.577          
+47              	1505.512          	7107.887          
+48              	1505.512          	7219.829          
+49              	1512.096          	7292.262          
+50              	1498.927          	7391.035          
+51              	1508.804          	7499.684          
+52              	1508.804          	7595.164          
+53              	422.308           	7203.367          
+54              	488.156           	7124.349          
+55              	544.127           	7028.869          
+56              	590.221           	6979.483          
+57              	642.899           	6933.389          
+58              	682.408           	6880.711          
+59              	731.795           	6824.740          
+60              	794.350           	6768.769          
+61              	866.784           	6709.505          
+62              	932.632           	6676.581          
+63              	1024.819          	6610.733          
+64              	1084.083          	6561.347          
+65              	1202.610          	6502.083          
+rI              	-1038.057         	7263.069          
+rII             	2967.025          	7188.900          
+
+[VERTICES]
+;Link            	X-Coord           	Y-Coord
+l3d5            	1802.507          	7647.951          
+
+[LABELS]
+;X-Coord             Y-Coord             Label & Anchor Node
+
+[BACKDROP]
+  DIMENSIONS  	0.000             	0.000             	10000.000         	10000.000         
+ UNITS          	None
+ FILE           	
+ OFFSET         	0.00            	0.00            
+
+[END]

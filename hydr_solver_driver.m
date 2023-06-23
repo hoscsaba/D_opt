@@ -1,9 +1,10 @@
-function hidr_solver_driver
+function hydr_solver_driver
     clear all, close all, clc
 
     global wds USE_PIVOTING
 
-    fname="systems/mot_example.inp";
+    %fname="systems/mot_example.inp";
+    fname="systems/mot_example_L.inp";
     %fname='systems/epanet_tutorial2.inp';
     %fname='systems/pivot_sample.inp';
     %fname='systems/Net1.inp';
@@ -22,15 +23,19 @@ function hidr_solver_driver
 
     %% Solve system without pivoting
     USE_PIVOTING=0;
+    tic
     [Q1,p1,dp1]=hydr_solver(SHOW_RESULTS,DO_PLOT);
+    t2=toc;
 
     %% Solve system with pivoting
     USE_PIVOTING=1;
+    tic
     [Q2,p2,dp2]=hydr_solver(SHOW_RESULTS,DO_PLOT);
+    t3=toc;
 
     fprintf("\n Difference between the two solutions:");
     fprintf("\n\t |Q1-Q2|/|Q1|=%g",norm(Q1-Q2)/norm(Q1));
-    fprintf("\n\t |p1-p2|/|p1|=%g\n",norm(p1-p2)/norm(p1));
-
+    fprintf("\n\t |p1-p2|/|p1|=%g",norm(p1-p2)/norm(p1));
+    fprintf("\n\t t(no pivoting)/t(pivoting) = %g",t2/t3);
 end
 
