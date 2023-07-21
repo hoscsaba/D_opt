@@ -1,5 +1,5 @@
-function [Q,p,dp]=hydr_solver(SHOW_RESULTS,x)
-	global wds USE_PIVOTING
+function [Q,p,dp]=hydr_solver(x)
+	global wds USE_PIVOTING SHOW_RESULTS
 	%global R D
 	%global piv_idx Rsinv_D Rsinv_Rp Np epanet_edge_idx
 
@@ -46,7 +46,7 @@ function [Q,p,dp]=hydr_solver(SHOW_RESULTS,x)
 		end
 		fprintf('\n\t Edges:');
 		for i=1:wds.N_e
-			fprintf('\n\t\t %i, ID: %5s, Q=%+6.1f m3/h = %+5.1f lps, dp=%+5.2f mwc',...
+			fprintf('\n\t\t %i, ID: %5s, Q=%+6.2f m3/h = %+6.2f lps, dp=%+5.2f mwc',...
 				i,wds.edges.ID{i},Q(i),Q(i)*1000/3600,dp(i));
 		end
 	end

@@ -1,7 +1,8 @@
-function x=hydr_solver_initiate(USE_PIVOTING, SHOW_RESULTS,DO_PLOT)
+function x=hydr_solver_initiate()
 	global wds 
 	global R D
 	global piv_idx Rsinv_D Rsinv_Rp Np epanet_edge_idx
+    global USE_PIVOTING SHOW_RESULTS DO_PLOT
 
 	%% Build graph
 	edgeNames=wds.edges.ID';

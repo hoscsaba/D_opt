@@ -1,4 +1,5 @@
-function s=load_epanet(fname,DEBUG_LEVEL)
+function s=load_epanet(fname)
+global DEBUG_LEVEL
 	if DEBUG_LEVEL>0
 		fprintf("Loading EPAnet file %s ...",fname);
 	end
@@ -507,7 +508,7 @@ function s=load_epanet(fname,DEBUG_LEVEL)
 		if (s.nodes.rank(node_from_idx)==1) || (s.nodes.rank(node_to_idx)==1)
 			s.edges.is_endedge(i)=1;
 			if DEBUG_LEVEL>1
-				fprintf("\n\t edges %s is connected to a rank-1 node.",s.edges.ID{i});
+				fprintf("\n\t edge %s is connected to a node with prescribed pressure",s.edges.ID{i});
 			end
 		else
 			s.edges.is_endedge(i)=0;
