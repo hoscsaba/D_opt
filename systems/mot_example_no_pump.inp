@@ -3,15 +3,13 @@
 
 [JUNCTIONS]
 ;ID              	Elev        	Demand      	Pattern         
- j1              	0           	0           	                	;
+ j1               0             -18.45                              ;
  j2              	0           	0           	                	;
  j3              	0           	0           	                	;
- j4              	0           	5           	                	;
  j5              	0           	5           	                	;
 
 [RESERVOIRS]
 ;ID              	Head        	Pattern         
- rI              	0           	                	;
  rII             	0           	                	;
 
 [TANKS]
@@ -19,17 +17,15 @@
 
 [PIPES]
 ;ID              	Node1           	Node2           	Length      	Diameter    	Roughness   	MinorLoss   	Status
- p1              	j1              	j2              	1000        	100         	100         	0           	Open  	;
+ p1               j1                j2                14000         100           100           0             Open    ;
  p2              	j2              	j3              	14000        	100         	100         	0           	Open  	;
- p3              	j3              	j4              	14000        	100         	100         	0           	Open  	;
+ p3              	j3              	rII              	14000        	100         	100         	0           	Open  	;
  p6              	j2              	j5              	14000        	100          	100         	0           	Open  	;
- p7              	j5              	j4              	14000        	100          	100         	0           	Open  	;
+ p7              	j5              	rII              	14000        	100          	100         	0           	Open  	;
  p8              	j3              	j5              	14000        	100         	100         	0           	Open  	;
- p5              	j4              	rII             	1000        	100           100         	0           	Open  	;
 
 [PUMPS]
 ;ID              	Node1           	Node2           	Parameters
- pump4           	rI              	j1              	HEAD 1	;
 
 [VALVES]
 ;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   

@@ -15,7 +15,7 @@ change_diameter("p5",0.001);
 %% set up problem
 USE_PIVOTING=0; SHOW_RESULTS=0;
 id_pipes_to_optimize={"p2","p6"};
-idx_pipes=[1:3,5:8];
+idx_pipes=length(wds.edges.ID);
 Dmin=10/1000; %m
 
 %% Optimize with fmincon

@@ -2,19 +2,32 @@ function hydr_opti_D_driver_1pipe
 clear all, close all, clc
 
 global wds DEBUG_LEVEL USE_PIVOTING SHOW_RESULTS
-global idx_pipes id_pipes_to_optimize
+global pivot_edge_idx
+global idx_pipes id_pipes_to_optimize idx_pipes_to_optimize
 
+%% Some settings
+DEBUG_LEVEL  = 0;
+USE_PIVOTING = 1; 
+PIVOT_METHOD = 1; % 0 - heuristic, 1 - spanning tree
+DO_PLOT      = 0;
+SHOW_RESULTS = 0;
 probname='mot_example';
 fname=fullfile('systems',[probname,'.inp']);
 
+id_pipes_to_optimize={"p1"};
+
 %% Load system to solver
-DEBUG_LEVEL=0;
-wds=load_epanet(fname,DEBUG_LEVEL);
+wds=load_epanet(fname);
 
 %% set up problem
-USE_PIVOTING=0; SHOW_RESULTS=0;
-id_pipes_to_optimize={"p1"};
-idx_pipes=[1:3,5:8];
+if USE_PIVOTING==1
+    pivot_edge_idx=find_pivot_flows(DO_PLOT,PIVOT_METHOD);
+end
+
+for i=1:length(id_pipes_to_optimize)
+    idx_pipes_to_optimize(i)=get_idx_from_id(id_pipes_to_optimize{i});
+end
+idx_pipes=length(wds.edges.ID);
 Dmin=10/1000; %m
 
 %% Optimize with fmincon
@@ -35,8 +48,9 @@ tic
 t2=toc;
 
 %% Results
-%% Results
-fp=fopen('hydr_opti_driver_1pipe.res','w');
+fp=fopen('hydr_opti_D_driver_1pipe.res','w');
+fprintf(fp,'\n USE_PIVOTING         : %g',USE_PIVOTING);
+fprintf(fp,'\n USE_ANALYTIC_GRADIENT: %g',USE_PIVOTING);
 fprintf(fp,'\n fmincon: fmin=%g, time: %g s',costval1,t1);
 fprintf(fp,'\n ga     : fmin=%g, time: %g s\n',costval2,t2);
 fprintf(fp,'\n name  fmincon  ga (mm)');

@@ -1,7 +1,10 @@
 function pivot_edge_idx=find_pivot_flows(DO_PLOT,method)
 global wds
 global edgepaths edgecycles N_nodes_r1 epanet_edge_idx
-global DEBUG
+global DEBUG SHOW_RESULTS 
+global D Np Rsinv_D Rsinv_Rp
+
+build_R();
 
 % For cycle and path analysis, use undrirected graph
 edgeNames=wds.edges.ID';
@@ -213,6 +216,22 @@ if method==1
         fprintf("\n\t Number of unknown with    pivoting : %g, %g%%",num_of_vars2,num_of_vars2/num_of_vars*100);
     end
 end
+
+    Np=length(pivot_edge_idx);
+    if SHOW_RESULTS==1
+        fprintf("\n\n These are the %d pivot flow rates:",length(piv_idx));
+        for i=1:Np
+            idx=wds.edges.type_idx(piv_idx(i));
+            fprintf("\n\t idx: %2d, ID: %s, D=%g, L=%g",piv_idx(i),wds.edges.ID{piv_idx(i)},...
+                wds.edges.diameter(idx),wds.edges.pipe.L(idx));
+        end
+    end
+    [Rp,Rs]=split_R(pivot_edge_idx);
+    Rsinv_D=inv(Rs)*D;
+    Rsinv_Rp=inv(Rs)*Rp;
+%    x=[ones(1,wds.N_j), ones(1,Np)];
+
+
 end
 
 function obj = pivot_objective(pivot_edge_idx)
