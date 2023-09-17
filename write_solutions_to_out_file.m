@@ -1,85 +1,60 @@
-function out = write_solutions_to_out_file(fname,Dopt1,Dopt2,Dopt3)
-global wds OPT_PAR id_pipes_to_optimize
-global probname 
-global costval1 t1 out1
-global costval2 t2 out2
-global costval3 t3 out3
+function write_solutions_to_out_file(fname,xopt,costval,out,t1)
+global wds id_pipes_to_optimize
+global USE_PIVOTING OPT_PAR USER_GRADIENT OPT_SOLVER
+global probname xini
 
 fp=fopen(fname,'w');
-	fprintf(fp,'\n Network                      : %s',[probname,'.inp']);
-	fprintf(fp,'\n Parameter                    : %s',OPT_PAR);
-	fprintf(fp,'\n (1) fmincon (no grad. info)  : fmin=%5.2e, time: %5.1f s, fun_evals: %g',costval1,t1,out1.funcCount);
-	fprintf(fp,'\n (2) fmincon (with grad. info): fmin=%5.2e, time: %5.1f s, fun_evals: %g',costval2,t2,out2.funcCount);
-	fprintf(fp,'\n (3) ga                       : fmin=%5.2e, time: %5.1f s, fun_evals: %g\n',costval3,t3,out3.funccount);
-	fprintf(fp,'\n Optimal values found:');
-	fprintf(fp,'\n name:  fmincon (no grad info), fmincon (grad. info),  ga');
-	for i=1:length(Dopt1)
-		fprintf(fp,'\n %s: %5.3e, %5.3e, %5.3e',id_pipes_to_optimize{i},Dopt1(i)*1000,Dopt2(i)*1000,Dopt3(i)*1000);
-	end
+fprintf(fp,'\n Network                      : %s',[probname,'.inp']);
+fprintf(fp,'\n Parameter to optimize        : %s',OPT_PAR);
+fprintf(fp,'\n USE_PIVOTING                 : %g',USE_PIVOTING );
+fprintf(fp,'\n USER_GRADIENT                : %g',USER_GRADIENT);
+fprintf(fp,'\n OPT_SOLVER                   : %s',OPT_SOLVER);
+fprintf(fp,'\n objective value              : %g',costval);
+fprintf(fp,'\n CPU time                     : %g',t1);
+switch OPT_SOLVER
+    case 'fmincon'
+        fprintf(fp,'\n funCount                     : %g',out.funcCount);
+    case 'ga'
+        fprintf(fp,'\n funCount                     : %g',out.funccount);
+    otherwise
+        OPT_SOLVER
+        error('Unknown OPT_SOLVER')
+end
+fprintf(fp,'\n Optimal values found:');
+fprintf(fp,'\n name, value');
+for i=1:length(xopt)
+    fprintf(fp,'\n %10s, %5.3e',id_pipes_to_optimize{i},xopt(i));
+end
 
-	switch OPT_PAR
-		case 'L'
-			for i=1:length(Dopt1)
-				change_length(id_pipes_to_optimize{i},Dopt1(i));
-			end
-		case 'D'
-			for i=1:length(Dopt1)
-				change_diameter(id_pipes_to_optimize{i},Dopt1(i));
-			end
+switch OPT_PAR
+    case 'L'
+        for i=1:length(xopt)
+            change_length(id_pipes_to_optimize{i},xopt(i));
+        end
+    case 'D'
+        for i=1:length(xopt)
+            change_diameter(id_pipes_to_optimize{i},xopt(i));
+        end
 
-		otherwise 
-			OPT_PAR
-			error('The value of OPT_PAR must be: D|L !');
-	end
-	[Q1,p1,dp1]=hydr_solver();
+    otherwise
+        OPT_PAR
+        error('The value of OPT_PAR must be: D|L !');
+end
+[Q,p,dp]=hydr_solver(xini);
 
-		switch OPT_PAR
-		case 'L'
-			for i=1:length(Dopt2)
-				change_length(id_pipes_to_optimize{i},Dopt2(i));
-			end
-		case 'D'
-			for i=1:length(Dopt2)
-				change_diameter(id_pipes_to_optimize{i},Dopt2(i));
-			end
-
-		otherwise 
-			OPT_PAR
-			error('The value of OPT_PAR must be: D|L !');
-	end
-	[Q2,p2,dp2]=hydr_solver();
-
-		switch OPT_PAR
-		case 'L'
-			for i=1:length(Dopt3)
-				change_length(id_pipes_to_optimize{i},Dopt3(i));
-			end
-		case 'D'
-			for i=1:length(Dopt3)
-				change_diameter(id_pipes_to_optimize{i},Dopt3(i));
-			end
-
-		otherwise 
-			OPT_PAR
-			error('The value of OPT_PAR must be: D|L !');
-	end
-	[Q3,p3,dp3]=hydr_solver();
-
-
-nj=length(wds.nodes.ID);
 fprintf(fp,'\n\n edge flow rates:');
-	for i=1:length(Q1)
-		fprintf(fp,'\n\t %10s: %6.2f  %6.2f  %6.2f',wds.edges.ID{i},Q1(i),Q2(i),Q3(i));
-	end
+for i=1:length(Q)
+    fprintf(fp,'\n\t %10s: %6.2f',wds.edges.ID{i},Q(i));
+end
 
 fprintf(fp,'\n\n edge pressure drops:');
-	for i=1:length(Q1)
-		fprintf(fp,'\n\t %10s: %6.2f  %6.2f  %6.2f',wds.edges.ID{i},dp1(i),dp2(i),dp3(i));
-	end
+for i=1:length(Q)
+    fprintf(fp,'\n\t %10s: %6.2f  %6.2f  %6.2f',wds.edges.ID{i},dp(i));
+end
 
-	fprintf(fp,'\n\n node pressures:');
-	for i=1:length(p1)
-		fprintf(fp,'\n\t %10s: %6.2f  %6.2f  %6.2f',wds.nodes.ID{i},p1(i),p2(i),p3(i));
-	end
+fprintf(fp,'\n\n node pressures:');
+for i=1:length(p)
+    fprintf(fp,'\n\t %10s: %6.2f  %6.2f  %6.2f',wds.nodes.ID{i},p(i));
+end
 fclose(fp);
-	end
+end

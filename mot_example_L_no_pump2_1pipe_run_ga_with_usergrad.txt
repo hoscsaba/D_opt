@@ -1,0 +1,8 @@
+
+ Network                      : mot_example_L_no_pump2.inp
+ Parameter to optimize        : L
+ USE_PIVOTING                 : 0
+ USER_GRADIENT                : 1
+ OPT_SOLVER                   : ga
+ objective value              : 5.7236e+09
+ CPU time                     : 330746

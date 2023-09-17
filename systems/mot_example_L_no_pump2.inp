@@ -3,7 +3,7 @@
 
 [JUNCTIONS]
 ;ID              	Elev        	Demand      	Pattern         
- j1              	0           	0           	                	;
+ j1              	0           	-20         	                	;
  j2              	0           	0           	                	;
  j3              	0           	5           	                	;
  j4              	0           	5           	                	;
@@ -76,8 +76,7 @@
 
 [RESERVOIRS]
 ;ID              	Head        	Pattern         
- rI              	0           	                	;
- rII             	30          	                	;
+ rII             	0           	                	;
 
 [TANKS]
 ;ID              	Elevation   	InitLevel   	MinLevel    	MaxLevel    	Diameter    	MinVol      	VolCurve        	Overflow
@@ -95,12 +94,12 @@
  l2d7            	6               	7               	1000        	70          	100         	0           	Open  	;
  l2d8            	7               	8               	1000        	80          	100         	0           	Open  	;
  l2d9            	8               	9               	1000        	90          	100         	0           	Open  	;
- l2d10           	9               	10              	1000        	100          	100         	0           	Open  	;
- l2d11           	10              	11              	1000        	110          	100         	0           	Open  	;
- l2d12           	11              	12              	1000        	120          	100         	0           	Open  	;
- l2d13           	12              	13              	1000        	130          	100         	0           	Open  	;
- l2d14           	13              	j3              	1000        	140          	100         	0           	Open  	;
- l3d1               j3                  14                  1000            10             100             0               Open    ;
+ l2d10           	9               	10              	1000        	100         	100         	0           	Open  	;
+ l2d11           	10              	11              	1000        	110         	100         	0           	Open  	;
+ l2d12           	11              	12              	1000        	120         	100         	0           	Open  	;
+ l2d13           	12              	13              	1000        	130         	100         	0           	Open  	;
+ l2d14           	13              	j3              	1000        	140         	100         	0           	Open  	;
+ l3d1            	j3              	14              	1000        	10          	100         	0           	Open  	;
  l3d2            	14              	15              	1000        	20          	100         	0           	Open  	;
  l3d3            	15              	16              	1000        	30          	100         	0           	Open  	;
  l3d4            	16              	17              	1000        	40          	100         	0           	Open  	;
@@ -109,18 +108,18 @@
  l3d7            	19              	20              	1000        	70          	100         	0           	Open  	;
  l3d8            	20              	21              	1000        	80          	100         	0           	Open  	;
  l3d9            	21              	22              	1000        	90          	100         	0           	Open  	;
- l3d10           	22              	23              	1000        	100          	100         	0           	Open  	;
- l3d11           	23              	24              	1000        	110          	100         	0           	Open  	;
- l3d12           	24              	25              	1000        	120          	100         	0           	Open  	;
- l3d13           	25              	26              	1000        	130          	100         	0           	Open  	;
- l3d14           	26              	j4              	1000        	140          	100         	0           	Open  	;
- l7d14           	j4              	27              	1000        	140          	100         	0           	Open  	;
- l7d13           	27              	28              	1000        	130          	100         	0           	Open  	;
- l7d12           	28              	29              	1000        	120          	100         	0           	Open  	;
+ l3d10           	22              	23              	1000        	100         	100         	0           	Open  	;
+ l3d11           	23              	24              	1000        	110         	100         	0           	Open  	;
+ l3d12           	24              	25              	1000        	120         	100         	0           	Open  	;
+ l3d13           	25              	26              	1000        	130         	100         	0           	Open  	;
+ l3d14           	26              	j4              	1000        	140         	100         	0           	Open  	;
+ l7d14           	j4              	27              	1000        	140         	100         	0           	Open  	;
+ l7d13           	27              	28              	1000        	130         	100         	0           	Open  	;
+ l7d12           	28              	29              	1000        	120         	100         	0           	Open  	;
  l7d11           	29              	30              	1000        	110         	100         	0           	Open  	;
- l7d10           	30              	31              	1000        	100          	100         	0           	Open  	;
+ l7d10           	30              	31              	1000        	100         	100         	0           	Open  	;
  l7d9            	31              	32              	1000        	90          	100         	0           	Open  	;
- l7d8            	32              	33              	1000        	80         	100         	0           	Open  	;
+ l7d8            	32              	33              	1000        	80          	100         	0           	Open  	;
  l7d7            	33              	34              	1000        	70          	100         	0           	Open  	;
  l7d6            	34              	35              	1000        	60          	100         	0           	Open  	;
  l7d5            	35              	36              	1000        	50          	100         	0           	Open  	;
@@ -137,11 +136,11 @@
  l8d7            	47              	46              	1000        	70          	100         	0           	Open  	;
  l8d8            	46              	45              	1000        	80          	100         	0           	Open  	;
  l8d9            	45              	44              	1000        	90          	100         	0           	Open  	;
- l8d10           	44              	43              	1000        	100          	100         	0           	Open  	;
- l8d11           	43              	42              	1000        	110          	100         	0           	Open  	;
- l8d12           	42              	41              	1000        	120          	100         	0           	Open  	;
- l8d13           	41              	40              	1000        	130          	100         	0           	Open  	;
- l8d14           	40              	j5              	1000        	140          	100         	0           	Open  	;
+ l8d10           	44              	43              	1000        	100         	100         	0           	Open  	;
+ l8d11           	43              	42              	1000        	110         	100         	0           	Open  	;
+ l8d12           	42              	41              	1000        	120         	100         	0           	Open  	;
+ l8d13           	41              	40              	1000        	130         	100         	0           	Open  	;
+ l8d14           	40              	j5              	1000        	140         	100         	0           	Open  	;
  l6d1            	j2              	53              	1000        	10          	100         	0           	Open  	;
  l6d2            	53              	54              	1000        	20          	100         	0           	Open  	;
  l6d3            	54              	55              	1000        	30          	100         	0           	Open  	;
@@ -151,16 +150,14 @@
  l6d7            	58              	59              	1000        	70          	100         	0           	Open  	;
  l6d8            	59              	60              	1000        	80          	100         	0           	Open  	;
  l6d9            	60              	61              	1000        	90          	100         	0           	Open  	;
- l6d10           	61              	62              	1000        	100          	100         	0           	Open  	;
- l6d11           	62              	63              	1000        	110          	100         	0           	Open  	;
- l6d12           	63              	64              	1000        	120          	100         	0           	Open  	;
- l6d13           	64              	65              	1000        	130          	100         	0           	Open  	;
- l6d14           	65              	j5              	1000        	140          	100         	0           	Open  	;
-
+ l6d10           	61              	62              	1000        	100         	100         	0           	Open  	;
+ l6d11           	62              	63              	1000        	110         	100         	0           	Open  	;
+ l6d12           	63              	64              	1000        	120         	100         	0           	Open  	;
+ l6d13           	64              	65              	1000        	130         	100         	0           	Open  	;
+ l6d14           	65              	j5              	1000        	140         	100         	0           	Open  	;
 
 [PUMPS]
 ;ID              	Node1           	Node2           	Parameters
- pump4           	rI              	j1              	HEAD 1	;
 
 [VALVES]
 ;ID              	Node1           	Node2           	Diameter    	Type	Setting     	MinorLoss   
@@ -178,16 +175,18 @@
 
 [CURVES]
 ;ID              	X-Value     	Y-Value
-;PUMP: PUMP: PUMP: Pump curve
+;PUMP: PUMP: PUMP: PUMP: Pump curve
  1               	30          	50          
-;PUMP: PUMP: 
+;PUMP: PUMP: PUMP: 
  2               	30          	50          
 
 [CONTROLS]
 
 
 
+
 [RULES]
+
 
 
 
@@ -327,7 +326,6 @@ j5              	1498.495          	6410.134
 63              	1024.819          	6610.733          
 64              	1084.083          	6561.347          
 65              	1202.610          	6502.083          
-rI              	-1038.057         	7263.069          
 rII             	2967.025          	7188.900          
 
 [VERTICES]

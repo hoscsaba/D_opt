@@ -1,6 +1,6 @@
 function [Q,p,dp]=hydr_solver(varargin)
-global wds USE_PIVOTING SHOW_RESULTS
-global Np Rsinv_D Rsinv_Rp
+global wds USE_PIVOTING SHOW_RESULTS DEBUG_LEVEL
+global xini
 
 g=9.81;
 
@@ -51,9 +51,20 @@ end
 
 %% Solve system
 %options = optimset('Display','iter','TolX',1e-4);
-%options = optimoptions('fsolve','Display','none','PlotFcn',@optimplotfirstorderopt);
-%x=hydr_solver_initiate()
-x=fsolve(@RHS,xini);%,options);
+if DEBUG_LEVEL>3
+options = optimoptions('fsolve',...
+    'MaxFunctionEvaluations',1.42e4*10,...
+    'TolX',1e-3,...
+    'Display','iter',...
+    'PlotFcn',@optimplotfirstorderopt);
+else
+    options= optimoptions('fsolve',...
+        'MaxFunctionEvaluations',1.42e4*10,...
+        'TolX',1e-3);
+end
+
+x=fsolve(@RHS,xini,options);
+xini=x;
 
 %% Recover pressures and flow rates
 p=x(1:wds.N_j);
@@ -99,9 +110,9 @@ end
 
 function out = RHS(x)
 global wds
-global N_n N_e
-global A lambda L D g h
-global R f
+global N_e
+global A  L D g
+global R
 global USE_PIVOTING Np
 
 p=x(1:wds.N_j); % p: mwc
@@ -285,4 +296,8 @@ elseif strcmp(wds.options.Headloss,'D-W')
 else
     error('Unknown Headloss formula!');
 end
+if L<0.01
+    out=0;
+end
+
 end
