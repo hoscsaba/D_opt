@@ -131,7 +131,9 @@ fprintf(fp,'\n;ID\t Elevation\t InitLevel\t MinLevel\t MaxLevel\t Diameter\t Min
 nt=1;
 for i=1:length(wds.nodes.type)
     if wds.nodes.type(i)==1
-        fprintf(fp,"\n %15s\t %5.3f\t %5.1f\t %5.1f\t %5.1f\t %5.1f\t %g\t %15s;",...
+        %wds.nodes.tank
+        %pause
+        fprintf(fp,"\n %15s\t %5.3f\t %5.1f\t %5.1f\t %5.1f\t %5.1f\t %g\t %15s\t %5.1f;",...
             wds.nodes.ID{i}, ...
             wds.nodes.tank.elev(nt),...
             wds.nodes.tank.Hini(nt),...
@@ -139,9 +141,8 @@ for i=1:length(wds.nodes.type)
             wds.nodes.tank.Hmax(nt),...
             wds.nodes.tank.diameter(nt), ...
             wds.nodes.tank.MinVol(nt), ...
-            wds.nodes.tank.VolCurve{nt});
-
-        %wds.nodes.tank.Overflow(nt),...
+            wds.nodes.tank.VolCurve{nt},...
+            wds.nodes.tank.Overflow(nt));
         nt=nt+1;
     end
 end
@@ -292,6 +293,9 @@ end
 function write_controls(outfile,wds)
 fp=fopen(outfile,'a');
 fprintf(fp,'\n[CONTROLS]');
+for i=1:length(wds.controls.line)
+    fprintf(fp,"\n%s\n",wds.controls.line{i});
+end
 fprintf(fp,'\n');
 fclose(fp);
 end
@@ -299,6 +303,16 @@ end
 function write_rules(outfile,wds)
 fp=fopen(outfile,'a');
 fprintf(fp,'\n[RULES]');
+il=0;
+for i=1:length(wds.rules.line)
+    fprintf(fp,"\n%s \t %s",wds.rules.line{i});
+    il=il+1;
+    if il==3
+        fprintf(fp,"\n");
+        il=0;
+    end
+
+end
 fprintf(fp,'\n');
 fclose(fp);
 end
