@@ -149,18 +149,22 @@ while cl<length(d)
                 s.nodes.tank.MinVol(nt)=str2num(tmp);
 
                 [tmp,strrem]=strtok(strrem);
+                [tmp1,strrem]=strtok(strrem);
+                
                 if isempty(strtrim(tmp)) || strcmp(strtrim(tmp),';')==1
                     s.nodes.tank.VolCurve{nt}='';
+                    s.nodes.tank.Overflow{nt}='';
                 else
                     s.nodes.tank.VolCurve{nt}=tmp;
+                    s.nodes.tank.Overflow{nt}=tmp1(1:end-1);
                 end
 
-                [tmp,strrem]=strtok(strrem);
-                if ~isempty(strtrim(tmp))
-                    s.nodes.tank.Overflow(nt)=str2num(tmp);
-                else
-                    s.nodes.tank.Overflow(nt)=s.nodes.tank.Hmax(nt);
-                end
+                % [tmp,strrem]=strtok(strrem);
+                % if ~isempty(strtrim(tmp))
+                %     s.nodes.tank.Overflow{nt}=tmp;
+                % else
+                %     s.nodes.tank.Overflow{nt}='';
+                % end
 
                 if DEBUG_LEVEL>2
                     fprintf("\n\t #%2d: ID=%15s, elev=%5.3f m, Hini=%5.1f m, " + ...
@@ -996,7 +1000,7 @@ for i=1:length(s.edges.ID)
 end
 
 if DEBUG_LEVEL>0
-    fprintf('\n done');
+    fprintf(' done.');
 end
 end
 
