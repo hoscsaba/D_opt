@@ -34,6 +34,8 @@ while cl<length(d)
                     node_count=node_count+1;
                     s.nodes.type(node_count)=0;
                     s.nodes.type_idx(node_count)=nj;
+                    s.nodes.X(node_count)=0;
+                    s.nodes.Y(node_count)=0;
 
                     [s.nodes.ID{node_count},strrem]=strtok(d{cl});
                     s.nodes.junction.ID_safe_save{node_count}=s.nodes.ID{node_count};
@@ -117,7 +119,7 @@ while cl<length(d)
             end
             cl=cl+1;
         end
-       
+
 
     elseif contains(d{cl},"[TANKS]")
         %';ID Elevation InitLevel MinLevel MaxLevel Diameter MinVol VolCurve Overflow'
@@ -134,6 +136,8 @@ while cl<length(d)
                 [s.nodes.ID{node_count},strrem]=strtok(d{cl});
                 s.nodes.demand(node_count)=0;
                 s.nodes.type_idx(node_count)=nt;
+                s.nodes.X(node_count)=0;
+                    s.nodes.Y(node_count)=0;
 
                 [tmp,strrem]=strtok(strrem);
                 s.nodes.tank.elev(nt)=str2num(tmp);
@@ -150,7 +154,7 @@ while cl<length(d)
 
                 [tmp,strrem]=strtok(strrem);
                 [tmp1,strrem]=strtok(strrem);
-                
+
                 if isempty(strtrim(tmp)) || strcmp(strtrim(tmp),';')==1
                     s.nodes.tank.VolCurve{nt}='';
                     s.nodes.tank.Overflow{nt}='';
@@ -199,6 +203,8 @@ while cl<length(d)
                 [s.nodes.ID{node_count},strrem]=strtok(d{cl});
                 s.nodes.demand(node_count)=0;
                 s.nodes.type_idx(node_count)=nr;
+                s.nodes.X(node_count)=0;
+                    s.nodes.Y(node_count)=0;
 
                 [tmp,strrem]=strtok(strrem);
                 s.nodes.reservoir.H(nr)=str2num(tmp);
@@ -414,7 +420,8 @@ while cl<length(d)
         cl=cl+1;
 
         ic=1;
-        while ~isempty(d{cl})if strcmp(d{cl}(1),';')==0
+        while ~isempty(d{cl})
+            if strcmp(d{cl}(1),';')==0
                 tmp=d{cl};
                 [tok,rem]=strtok(tmp);
                 [tok1,rem]=strtok(rem);
@@ -423,9 +430,30 @@ while cl<length(d)
                 s.coordinates.X(ic) = str2double(strtrim(tok1));
                 s.coordinates.Y(ic) = str2double(strtrim(rem));
 
+                % Add coordinates to nodes.
+                
+                [found, index] = ismember(s.coordinates.ID{ic} , s.nodes.ID);
+                
+                if found==1
+                    s.nodes.X(index)=s.coordinates.X(ic);
+                    s.nodes.Y(index)=s.coordinates.Y(ic);
+                    s.nodes.coordinate_found(index)=1;
+                    
+                else
+                    s.nodes.coordinate_found(index)=0;
+                    fprintf('\n \t coordinate ID: %s -> NOT FOUND in s.nodes.ID!\n',s.coordinates.ID{ic});
+                    pause
+                end
                 ic=ic+1;
+            end
+            cl=cl+1;
         end
-        cl=cl+1;
+        %% Is there a node for which no coordinate was found?
+        zero_indices = find(s.nodes.coordinate_found == 0);
+        if ~isempty(zero_indices)
+            warning('No coordinates were found for the following indices:');
+            disp(s.nodes.ID{zero_indices});
+            pause
         end
 
     elseif contains(d{cl},"[VERTICES]")
@@ -465,7 +493,7 @@ while cl<length(d)
             cl=cl+1;
         end
 
-         elseif contains(d{cl},"[CONTROLS]")
+    elseif contains(d{cl},"[CONTROLS]")
         if DEBUG_LEVEL>1
             fprintf("\n loading controls...");
         end
@@ -476,16 +504,16 @@ while cl<length(d)
             if  contains(d{cl},'[')==1
                 break;
             else
-            if strcmp(d{cl}(1),';')==0
-                % 1 sor, utána üres sor
-                s.controls.line{ic} = d{cl};
-                ic=ic+1;
-                cl=cl+2;
-            end            
+                if strcmp(d{cl}(1),';')==0
+                    % 1 sor, utána üres sor
+                    s.controls.line{ic} = d{cl};
+                    ic=ic+1;
+                    cl=cl+2;
+                end
             end
-        end        
-        
-        elseif contains(d{cl},"[RULES]")
+        end
+
+    elseif contains(d{cl},"[RULES]")
         if DEBUG_LEVEL>1
             fprintf("\n loading rules...");
         end
@@ -496,18 +524,18 @@ while cl<length(d)
             if  contains(d{cl},'[')==1
                 break;
             else
-            if strcmp(d{cl}(1),';')==0
-                % 2 soronként, utána üres sor
-                for jj=1:3
-                    s.rules.line{ir} = d{cl};
-                    ir=ir+1;
-                    cl=cl+1;
+                if strcmp(d{cl}(1),';')==0
+                    % 2 soronként, utána üres sor
+                    for jj=1:3
+                        s.rules.line{ir} = d{cl};
+                        ir=ir+1;
+                        cl=cl+1;
+                    end
                 end
-            end
-            cl=cl+1;
+                cl=cl+1;
             end
         end
-        
+
     elseif contains(d{cl},"[ENERGY]")
         if DEBUG_LEVEL>1
             fprintf("\n loading energies...");
@@ -584,7 +612,7 @@ while cl<length(d)
             else
                 % Add new pattern and data set
                 if DEBUG_LEVEL>2
-                    fprintf('\nPattern %s is missing, creating new entry...',tmp_p.ID{i});
+                    fprintf('\n\tPattern %s is missing, creating new entry...',tmp_p.ID{i});
                 end
                 new_idx=length(s.patterns.ID)+1;
                 s.patterns.ID{new_idx}=tmp_p.ID{i};
@@ -630,7 +658,7 @@ while cl<length(d)
                 s.demands.demand(ns)=str2double(strtrim(tmp1));
                 s.demands.pattern{ns}=strtrim(tmp2);
                 if isempty(s.demands.pattern{ns})
-                    fprintf('\n Pattern missing for demand: %s',s.demands.ID{ns});
+                    fprintf('\n\t Pattern missing for demand: %s',s.demands.ID{ns});
                 end
                 ns=ns+1;
             end
@@ -887,92 +915,89 @@ DO_COMPUTE_NODE_RANKS=1;
 if DO_COMPUTE_NODE_RANKS==1
 
     if DEBUG_LEVEL>0
-        fprintf('\n Computing node ranks & deleting orphan nodes...');
+        fprintf('\n computing node ranks & deleting orphan nodes...');
     end
 
     % Compute node ranks & remove orphan junctions (nodes)
-    node_count=0;
+    node_count=1;
     num_of_nodes_orig=length(s.nodes.ID);
     i=1;
-    
+
     while i<length(s.nodes.ID)+1 % length(s.nodes.ID) changes!!!
-         node_to_remove = s.nodes.ID{i};
-        s.nodes.rank(i)=0;       
+        node_to_remove = s.nodes.ID{i};
+        s.nodes.rank(i)=0;
 
-      %  for j=1:length(s.edges.ID)
-            idx = find(strcmp(s.nodes.ID{i},s.edges.node_from_ID),1);
-            if ~isempty(idx)
-               % s.edges.node_from_ID{idx}
-                s.nodes.rank(i)=s.nodes.rank(i)+1;
-            end
-            idx = find(strcmp(s.nodes.ID{i},s.edges.node_to_ID),1);
-            if ~isempty(idx)
-              %  s.edges.node_to_ID{idx}
-                s.nodes.rank(i)=s.nodes.rank(i)+1;
-            end
-            %if strcmp(s.nodes.ID{i},s.edges.node_from_ID{j})==1
-            %    s.nodes.rank(i)=s.nodes.rank(i)+1;
-            %end
-            %if strcmp(s.nodes.ID{i},s.edges.node_to_ID{j})==1
-            %    s.nodes.rank(i)=s.nodes.rank(i)+1;
-            %end
-           
-       % end
-       % s.nodes.rank(i)
-       % pause
 
-       is_type_node=0;
+        idx = find(strcmp(s.nodes.ID{i},s.edges.node_from_ID),1);
+        if ~isempty(idx)
+
+            s.nodes.rank(i)=s.nodes.rank(i)+1;
+        end
+        idx = find(strcmp(s.nodes.ID{i},s.edges.node_to_ID),1);
+        if ~isempty(idx)
+
+            s.nodes.rank(i)=s.nodes.rank(i)+1;
+        end
+
+
+        is_type_node=0;
         if s.nodes.rank(i)==0 && s.nodes.type(i)==0
-           
+            % DELETE THIS NODE
+
             is_type_node=1;
 
-            fprintf('\n %3.0f%% - node %s (#%d) rank=%d, deleting... (total: %d/%d nodes)', ...
+            fprintf('\n\t %3.0f%% - node %s (#%d) rank=%d, deleting... (total: %d/%d nodes)', ...
                 round(i)/length(s.nodes.ID)*100, ...
                 s.nodes.ID{i}, ...
-                i,...                
+                i,...
                 s.nodes.rank(i), ...
                 length(s.nodes.ID), ...
                 num_of_nodes_orig);
 
             s.nodes.type=remove_element_d(s.nodes.type,i);
             s.nodes.type_idx=remove_element_d(s.nodes.type_idx,i);
-            s.nodes.ID=remove_element_s(s.nodes.ID,i);      
+            s.nodes.ID=remove_element_s(s.nodes.ID,i);
             s.nodes.demand=remove_element_d(s.nodes.demand,i);
+            %s.nodes.junction.elevation(1:5)
             s.nodes.junction.elevation=remove_element_d(s.nodes.junction.elevation,node_count);
+            %s.nodes.junction.elevation(1:5)
+            %pause
             s.nodes.junction.pattern=remove_element_s(s.nodes.junction.pattern,node_count);
+            % s.node.junction.pattern_index ?
             s.nodes.junction.ID_safe_save=remove_element_d(s.nodes.junction.ID_safe_save,node_count);
 
-% At this points, s.nodes.ID{i} is the next node ID!!! Use node_to_remove
+            % At this points, s.nodes.ID{i} is the next node ID!!! Use node_to_remove
 
             %% Remove demand
             idx = find(strcmp(node_to_remove,s.demands.ID));
             if ~isempty(idx)
-                 fprintf('\n\t deleting demand %s',node_to_remove);
-                 s.demands.ID=remove_element_s(s.demands.ID,idx);
-                 s.demands.demand=remove_element_d(s.demands.demand,idx);
-                 s.demands.pattern=remove_element_s(s.demands.pattern,idx);
+                fprintf('\n\t deleting demand %s',node_to_remove);
+                s.demands.ID=remove_element_s(s.demands.ID,idx);
+                s.demands.demand=remove_element_d(s.demands.demand,idx);
+                s.demands.pattern=remove_element_s(s.demands.pattern,idx);
             else
                 fprintf('\n\t Unable to delete demand %s (not found.)',node_to_remove);
             end
 
-             %% Remove coordinate
+            %% Remove coordinate
             idx = find(strcmp(node_to_remove,s.coordinates.ID));
             if ~isempty(idx)
-                 fprintf('\n\t deleting coordinate %s',node_to_remove);
-                 s.coordinates.ID=remove_element_s(s.coordinates.ID,idx);
-                 s.coordinates.X=remove_element_d(s.coordinates.X,idx);
-                 s.coordinates.Y=remove_element_d(s.coordinates.Y,idx);
+                fprintf('\n\t deleting coordinate %s',node_to_remove);
+                s.coordinates.ID=remove_element_s(s.coordinates.ID,idx);
+                s.coordinates.X=remove_element_d(s.coordinates.X,idx);
+                s.coordinates.Y=remove_element_d(s.coordinates.Y,idx);
             else
-                  fprintf('\n\t Unable to delete coordinate %s (not found.)',node_to_remove);
+                fprintf('\n\t Unable to delete coordinate %s (not found.)',node_to_remove);
             end
 
         else
+            % DO NOT DELETE THIS NODE: EITHER NOT A NODE OR RANK>0
             if DEBUG_LEVEL>2
-            fprintf('\n %3.0f%% - node %s (#%d) rank=%d', ...
-                round(i)/length(s.nodes.ID)*100, ...
-                 s.nodes.ID{i}, ...
-                i,...                
-                s.nodes.rank(i));
+                fprintf('\n %3.0f%% - node %s (#%d) rank=%d', ...
+                    round(i)/length(s.nodes.ID)*100, ...
+                    s.nodes.ID{i}, ...
+                    i,...
+                    s.nodes.rank(i));
             end
             i=i+1;
             if is_type_node==0
@@ -982,26 +1007,26 @@ if DO_COMPUTE_NODE_RANKS==1
         %fprintf('\n i=%d, node_count=%d, length(s.nodes.ID)=%d',i,node_count,length(s.nodes.ID));
         %pause
     end
-    fprintf('\n Deleted %d of %d junctions (%g%%)\n', ...
+    fprintf('\n\t deleted %d of %d junctions (%g%%)\n', ...
         num_of_nodes_orig-length(s.nodes.ID),num_of_nodes_orig,(1-length(s.nodes.ID)/num_of_nodes_orig)*100);
 
-% Mark the edges connected to rank-1 nodes
-for i=1:length(s.edges.ID)
-    node_from_idx=find_node(s.edges.node_from_ID{i},s.nodes,0);
-    node_to_idx  =find_node(s.edges.node_to_ID{i},s.nodes,0);
-    if (s.nodes.rank(node_from_idx)==1) || (s.nodes.rank(node_to_idx)==1)
-        s.edges.is_endedge(i)=1;
-        if DEBUG_LEVEL>2
-            fprintf("\n\t edge %15s is connected to a node with rank 1 (no further edges).",s.edges.ID{i});
+    % Mark the edges connected to rank-1 nodes
+    for i=1:length(s.edges.ID)
+        node_from_idx=find_node(s.edges.node_from_ID{i},s.nodes,0);
+        node_to_idx  =find_node(s.edges.node_to_ID{i},s.nodes,0);
+        if (s.nodes.rank(node_from_idx)==1) || (s.nodes.rank(node_to_idx)==1)
+            s.edges.is_endedge(i)=1;
+            if DEBUG_LEVEL>2
+                fprintf("\n\t edge %15s is connected to a node with rank 1 (no further edges).",s.edges.ID{i});
+            end
+        else
+            s.edges.is_endedge(i)=0;
         end
-    else
-        s.edges.is_endedge(i)=0;
     end
-end
 
-if DEBUG_LEVEL>0
-    fprintf(' done.');
-end
+    if DEBUG_LEVEL>0
+        fprintf(' done.');
+    end
 end
 
 

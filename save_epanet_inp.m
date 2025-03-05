@@ -108,14 +108,17 @@ fprintf(fp,';ID              	Head        	Pattern  ');
 nr=1;
 for i=1:length(wds.nodes.type)
     if wds.nodes.type(i)==2
-        fprintf(fp,'\n %15s\t %6.2f\t %15s',...
+   %     fprintf(fp,'\n %15s\t %6.2f\t %15s',...
+   %         wds.nodes.ID{i}, ...
+   %         wds.nodes.reservoir.H(nr),...
+   %         wds.nodes.reservoir.pattern{nr});
+fprintf(fp,'\n %15s\t %6.2f',...
             wds.nodes.ID{i}, ...
-            wds.nodes.reservoir.H(nr),...
-            wds.nodes.reservoir.pattern{nr});
+            wds.nodes.reservoir.H(nr));
 
-        if length(wds.nodes.reservoir.pattern{nr})>1
+        %if length(wds.nodes.reservoir.pattern{nr})>1
             fprintf(fp,';');
-        end
+        %end
         nr=nr+1;
     end
 end
@@ -293,8 +296,10 @@ end
 function write_controls(outfile,wds)
 fp=fopen(outfile,'a');
 fprintf(fp,'\n[CONTROLS]');
+if isfield(wds,'controls')
 for i=1:length(wds.controls.line)
     fprintf(fp,"\n%s\n",wds.controls.line{i});
+end
 end
 fprintf(fp,'\n');
 fclose(fp);
@@ -303,6 +308,7 @@ end
 function write_rules(outfile,wds)
 fp=fopen(outfile,'a');
 fprintf(fp,'\n[RULES]');
+if isfield(wds,'rules')
 il=0;
 for i=1:length(wds.rules.line)
     fprintf(fp,"\n%s \t %s",wds.rules.line{i});
@@ -311,7 +317,7 @@ for i=1:length(wds.rules.line)
         fprintf(fp,"\n");
         il=0;
     end
-
+end
 end
 fprintf(fp,'\n');
 fclose(fp);
