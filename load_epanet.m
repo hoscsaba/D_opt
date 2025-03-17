@@ -923,11 +923,10 @@ if DO_COMPUTE_NODE_RANKS==1
     num_of_nodes_orig=length(s.nodes.ID);
     i=1;
 
-    while i<length(s.nodes.ID)+1 % length(s.nodes.ID) changes!!!
+    while i<length(s.nodes.ID)+1 % length(s.nodes.ID) changes!!!                
         node_to_remove = s.nodes.ID{i};
+
         s.nodes.rank(i)=0;
-
-
         idx = find(strcmp(s.nodes.ID{i},s.edges.node_from_ID),1);
         if ~isempty(idx)
 
@@ -935,7 +934,6 @@ if DO_COMPUTE_NODE_RANKS==1
         end
         idx = find(strcmp(s.nodes.ID{i},s.edges.node_to_ID),1);
         if ~isempty(idx)
-
             s.nodes.rank(i)=s.nodes.rank(i)+1;
         end
 
@@ -989,6 +987,7 @@ if DO_COMPUTE_NODE_RANKS==1
             else
                 fprintf('\n\t Unable to delete coordinate %s (not found.)',node_to_remove);
             end
+            
 
         else
             % DO NOT DELETE THIS NODE: EITHER NOT A NODE OR RANK>0
