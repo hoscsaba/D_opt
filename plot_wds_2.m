@@ -1,11 +1,11 @@
-function plot_wds_2(s,add_nodes)
+function plot_wds_2(s,add_nodes,add_node_labels)
 
-figure(1)
+figure
 hold on; % Keep the plot open for multiple drawings
 axis equal; % Ensure equal scaling for X and Y
 
 % Plot the edges
-for i = 1:length(s.edges.node_idx)
+for i = 1:length(s.edges.ID)
     edge = s.edges.node_idx{i}; % Get the indices of the nodes forming the edge
     x_coords = [s.nodes.X(edge(1)), s.nodes.X(edge(2))];
     y_coords = [s.nodes.Y(edge(1)), s.nodes.Y(edge(2))];
@@ -19,9 +19,11 @@ end
         scatter(s.nodes.X, s.nodes.Y, 60, 'ro', 'filled'); % Red circles for nodes
     end
     % Label the nodes with their IDs
+    if add_node_labels==1
     for i = 1:length(s.nodes.ID)
         text(s.nodes.X(i), s.nodes.Y(i), sprintf('%s', s.nodes.ID{i}), ...
             'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'FontSize', 10);
+    end
     end
 
     hold off;

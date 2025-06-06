@@ -232,9 +232,11 @@ fprintf(fp,'\n[STATUS]\n');
 
 fprintf(fp,';ID        Status/Setting');
 ns=1;
+if isfield(wds,'status')
 for i=1:length(wds.status.ID)
     fprintf(fp,"\n%15s\t %15s",wds.status.ID{ns},wds.status.status{ns});
     ns=ns+1;
+end
 end
 fprintf(fp,'\n');
 fclose(fp);
@@ -246,6 +248,7 @@ fp=fopen(outfile,'a');
 fprintf(fp,'\n[PATTERNS]\n');
 
 fprintf(fp,';ID              	Multipliers');
+if isfield(wds,'patterns')
 for i=1:length(wds.patterns.ID)
     if write_only_used==1
         if wds.patterns.is_used(i)==1
@@ -254,7 +257,7 @@ for i=1:length(wds.patterns.ID)
     else
         write_this_demand(fp,wds.patterns.ID{i},wds.patterns.data{i},data_per_lines);
     end
-
+end
 end
 fprintf(fp,'\n');
 fclose(fp);

@@ -247,13 +247,13 @@ while cl<length(d)
                 % REMOVE SPEED
                 [tmp,strrem]  =strtok(strrem);
                 % Get ID
-                [tmp2,strrem]  =strtok(strrem,';');
+                [tmp2,strrem]  =strtok(strrem,';')
 
 
-                %[tmp,strrem]  =strtok(strrem,';');
-                %[tmp,strrem]  =strtok(tmp);
+                if isempty(tmp2)==0
                 s.edges.pump.headcurve_ID{np}=strtrim(tmp1);
                 s.edges.pump.SPEED(np)=str2num(strtrim(tmp2));
+                end
                 if DEBUG_LEVEL>2
                     fprintf("\n\t #%2d: ID=%15s, nodes= %15s -> %15s, headcurve_ID: %15s, rel speed: %g",...
                         np,s.edges.ID{edge_count},...
@@ -282,20 +282,7 @@ while cl<length(d)
                 tmp_setting=str2num(tmp);
                 [tmp,strrem]  =strtok(strrem);
                 tmp_minorloss=str2num(tmp);
-                % =======
-                %                 [tmp,strrem]  =strtok(strrem,';');
-                %                 [tmp,strrem]  =strtok(tmp);
-                %                 s.edges.pump.headcurve_ID{np}=strtrim(strrem);
-                %                 if DEBUG_LEVEL>2
-                %                     fprintf("\n\t #%2d: ID=%15s, nodes= %15s -> %15s, headcurve_ID: HEAD %s",...
-                %                         np,s.edges.ID{edge_count},...
-                %                         s.edges.node_from_ID{edge_count},s.edges.node_to_ID{edge_count},...
-                %                         s.edges.pump.headcurve_ID{np});
-                %                 end
-                %                 cl=cl+1;
-                %             end
-                % >>>>>>> Stashed changes
-
+               
                 if strcmp(tmp_type,'TCV')
                     nv=nv+1;
                     edge_count=edge_count+1;
@@ -422,7 +409,7 @@ while cl<length(d)
         ic=1;
         while ~isempty(d{cl})
             if strcmp(d{cl}(1),';')==0
-                tmp=d{cl};
+                tmp=d{cl}
                 [tok,rem]=strtok(tmp);
                 [tok1,rem]=strtok(rem);
                 % Store values
@@ -569,8 +556,10 @@ while cl<length(d)
     elseif contains(d{cl},"[PATTERNS]")
         if DEBUG_LEVEL>1
             fprintf("\n loading patterns...");
-        end
+        end 
+        
         cl=cl+1;
+        if strcmp(d{cl}(1),';')==0
         np=1;
         s.patterns.ID{np}='ones';
         s.patterns.data{np}=ones(96,1);
@@ -606,8 +595,14 @@ while cl<length(d)
                 %end
                 rem=tmp_p.data{i};
                 while ~isempty(rem)
-                    [tmp,rem]=strtok(strtrim(rem));
-                    s.patterns.data{j}=[s.patterns.data{j} str2double(tmp)];
+                    [tmp,rem]=strtok(strtrim(rem));  
+                    tmpvec=s.patterns.data{j};
+                    if isrow(tmpvec)
+    tmpvec(end+1) = str2double(tmp);
+else
+    tmpvec(end+1,1) = str2double(tmp);
+end
+                    s.patterns.data{j}=tmpvec;
                 end
             else
                 % Add new pattern and data set
@@ -626,6 +621,7 @@ while cl<length(d)
                     s.patterns.data{new_idx}=[s.patterns.data{new_idx} str2double(tmp)];
                 end
             end
+        end
         end
     elseif contains(d{cl},"[STATUS]")
         if DEBUG_LEVEL>1
@@ -796,7 +792,8 @@ end
 if DEBUG_LEVEL>1
     fprintf("\n adding curves to pumps...");
 end
-if np>0
+
+if isfield(s.edges, 'pump')
     for ip=1:length(s.edges.pump.headcurve_ID)
         tmp=find(s.edges.type==1,ip);
         idx_of_ID=tmp(end);
@@ -925,17 +922,18 @@ if DO_COMPUTE_NODE_RANKS==1
 
     while i<length(s.nodes.ID)+1 % length(s.nodes.ID) changes!!!                
         node_to_remove = s.nodes.ID{i};
-
         s.nodes.rank(i)=0;
-        idx = find(strcmp(s.nodes.ID{i},s.edges.node_from_ID),1);
+        
+        idx = find(strcmp(s.nodes.ID{i},s.edges.node_from_ID)==1);
         if ~isempty(idx)
-
-            s.nodes.rank(i)=s.nodes.rank(i)+1;
+            s.nodes.rank(i)=s.nodes.rank(i)+length(idx);
         end
-        idx = find(strcmp(s.nodes.ID{i},s.edges.node_to_ID),1);
+        idx = find(strcmp(s.nodes.ID{i},s.edges.node_to_ID)==1);
         if ~isempty(idx)
-            s.nodes.rank(i)=s.nodes.rank(i)+1;
+            s.nodes.rank(i)=s.nodes.rank(i)+length(idx);
         end
+        
+        
 
 
         is_type_node=0;
@@ -956,12 +954,8 @@ if DO_COMPUTE_NODE_RANKS==1
             s.nodes.type_idx=remove_element_d(s.nodes.type_idx,i);
             s.nodes.ID=remove_element_s(s.nodes.ID,i);
             s.nodes.demand=remove_element_d(s.nodes.demand,i);
-            %s.nodes.junction.elevation(1:5)
             s.nodes.junction.elevation=remove_element_d(s.nodes.junction.elevation,node_count);
-            %s.nodes.junction.elevation(1:5)
-            %pause
             s.nodes.junction.pattern=remove_element_s(s.nodes.junction.pattern,node_count);
-            % s.node.junction.pattern_index ?
             s.nodes.junction.ID_safe_save=remove_element_d(s.nodes.junction.ID_safe_save,node_count);
 
             % At this points, s.nodes.ID{i} is the next node ID!!! Use node_to_remove
@@ -1048,90 +1042,108 @@ for i=1:length(s.edges.ID)
 end
 
 
-
-
 %% CHECK MISSING & UNUSED PATTERNS AMONG NODES
-n_n=1;
-for i=1:length(s.nodes.ID)
-    if s.nodes.type(i)==0
-        if ~isempty(s.nodes.junction.pattern{n_n})
-            tmp1=s.nodes.junction.pattern{n_n};
-            is_found=0;
-            %fprintf('\n\n\t node %3d: %15s pattern: %s searching....',...
-            %        i,s.nodes.ID{i},s.nodes.junction.pattern{i});
-            for j=1:length(s.patterns.ID)
-                tmp2=s.patterns.ID{j};
-                if strcmp(tmp1,tmp2)==1
-                    is_found=1;
-                    s.nodes.junction.pattern_idx(n_n)=j;
-                    s.patterns.is_used(j)=1;
-                    %       fprintf(" found, pattern_idx=%g.",j);
-                end
-            end
-            if is_found==0
-                fprintf('\n\n\t node #%3d: ID %15s, pattern: %s searching....',...
-                    i,s.nodes.ID{i},s.nodes.junction.pattern{n_n});
-                fprintf("\n\t ERROR: pattern >>%s<< not found!!!\n\n",tmp1);
-            end
-        else
-            s.nodes.junction.pattern_idx(n_n)=1;
-        end
-        n_n=n_n+1;
-    end
-end
+% n_n=1;
+% for i=1:length(s.nodes.ID)
+%     if s.nodes.type(i)==0
+%         if ~isempty(s.nodes.junction.pattern{n_n})
+%             tmp1=s.nodes.junction.pattern{n_n};
+%             is_found=0;
+%             %fprintf('\n\n\t node %3d: %15s pattern: %s searching....',...
+%             %        i,s.nodes.ID{i},s.nodes.junction.pattern{i});
+%             for j=1:length(s.patterns.ID)
+%                 tmp2=s.patterns.ID{j};
+%                 if strcmp(tmp1,tmp2)==1
+%                     is_found=1;
+%                     s.nodes.junction.pattern_idx(n_n)=j;
+%                     s.patterns.is_used(j)=1;
+%                     %       fprintf(" found, pattern_idx=%g.",j);
+%                 end
+%             end
+%             if is_found==0
+%                 fprintf('\n\n\t node #%3d: ID %15s, pattern: %s searching....',...
+%                     i,s.nodes.ID{i},s.nodes.junction.pattern{n_n});
+%                 fprintf("\n\t ERROR: pattern >>%s<< not found!!!\n\n",tmp1);
+%             end
+%         else
+%             s.nodes.junction.pattern_idx(n_n)=1;
+%         end
+%         n_n=n_n+1;
+%     end
+% end
 
 % CHECK MISSING & UNUSED PATTERNS AMONG DEMANDS
-n_n=1;
-for i=1:length(s.demands.ID)
-
-    if ~isempty(s.demands.pattern{n_n})
-        tmp1=s.demands.pattern{n_n};
-        is_found=0;
-        % fprintf('\n\n\t demand %3d: %15s pattern: %s searching....',...
-        %         i,s.demands.ID{i},s.demands.pattern{i});
-        for j=1:length(s.patterns.ID)
-            tmp2=s.patterns.ID{j};
-            if strcmp(tmp1,tmp2)==1
-                is_found=1;
-                s.patterns.is_used(j)=1;
-                %s.nodes.junction.pattern_idx(n_n)=j;
-                %     fprintf(" found, pattern_idx=%g.",j);
-            end
-        end
-        if is_found==0
-            fprintf('\n\n\t demand #%3d: ID %15s, pattern: %s searching....',...
-                i,s.demands.ID{i},s.demands.pattern{n_n});
-            fprintf("\n\t ERROR: pattern %s not found!!!\n\n",tmp1);
-            %pause
-        end
-    else
-        %  s.nodes.junction.pattern_idx(n_n)=1;
-    end
-    n_n=n_n+1;
-
-end
+% n_n=1;
+% for i=1:length(s.demands.ID)
+% 
+%     if ~isempty(s.demands.pattern{n_n})
+%         tmp1=s.demands.pattern{n_n};
+%         is_found=0;
+%         % fprintf('\n\n\t demand %3d: %15s pattern: %s searching....',...
+%         %         i,s.demands.ID{i},s.demands.pattern{i});
+%         for j=1:length(s.patterns.ID)
+%             tmp2=s.patterns.ID{j};
+%             if strcmp(tmp1,tmp2)==1
+%                 is_found=1;
+%                 s.patterns.is_used(j)=1;
+%                 %s.nodes.junction.pattern_idx(n_n)=j;
+%                 %     fprintf(" found, pattern_idx=%g.",j);
+%             end
+%         end
+%         if is_found==0
+%             fprintf('\n\n\t demand #%3d: ID %15s, pattern: %s searching....',...
+%                 i,s.demands.ID{i},s.demands.pattern{n_n});
+%             fprintf("\n\t ERROR: pattern %s not found!!!\n\n",tmp1);
+%             %pause
+%         end
+%     else
+%         %  s.nodes.junction.pattern_idx(n_n)=1;
+%     end
+%     n_n=n_n+1;
+% 
+% end
 
 %%---------------
 
 s.N_j=length(s.nodes.ID); % # of junctions
-s.N_t=length(s.nodes.tank.elev); % # of tanks
-s.N_r=length(s.nodes.reservoir.H); % # of reservoirs
 s.N_l=length(s.edges.pipe.roughness); % # of links (pipes)
-s.N_p=length(s.edges.pump.headcurve_ID); % # of pumps
-s.N_v=length(s.edges.valve.type); % # of valves
+
+if isfield(s.edges, 'tank')
+    s.N_t=length(s.nodes.tank.elev); % # of tanks
+else
+    s.N_t=0;
+end
+
+if isfield(s.edges, 'reservoir')
+    s.N_r=length(s.nodes.reservoir.H); % # of reservoirs
+else
+    s.N_r=0;
+end
+   
+if isfield(s.edges, 'pump')
+    s.N_p=length(s.edges.pump.headcurve_ID); % # of pumps
+else 
+    s.N_p=0;
+end
+if isfield(s.edges, 'valve')
+    s.N_v=length(s.edges.valve.type); % # of valves
+else
+    s.N_v=0;
+end
 s.N_e=length(s.edges.ID); % # of edges (pipe+pump+valve)
 
 if DEBUG_LEVEL>0
     fprintf('\n\n Summary:');
     fprintf('\n\t EPAnet file     : %s',fname);
-    fprintf('\n\t # of junctions  : %d',nj);
-    fprintf('\n\t # of tanks      : %d',nt);
-    fprintf('\n\t # of reservoirs : %d',nr);
-    fprintf('\n\t # of pipes      : %d',nl); % links
-    fprintf('\n\t # of pumps      : %d',np);
-    fprintf('\n\t # of TCV valves : %d',nv);
+    fprintf('\n\t # of junctions  : %d',s.N_j);
+    fprintf('\n\t # of tanks      : %d',s.N_t);
+    fprintf('\n\t # of reservoirs : %d',s.N_r);
+    fprintf('\n\t # of pipes      : %d',s.N_l); % links
+    fprintf('\n\t # of pumps      : %d',s.N_p);
+    fprintf('\n\t # of TCV valves : %d',s.N_v);
     fprintf('\n\t Units           : %s',s.options.Units);
     fprintf('\n\n');
+    
 end
 end
 
