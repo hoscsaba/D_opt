@@ -5,7 +5,7 @@ function hFig = plot_wds_4( ...
     add_edge_labels, ...
     edge_vals, ...
     edge_vels, ...
-    fignum, ...
+    title_text, ...
     ylabel_text, ...
     vmin, ...
     vmax)
@@ -34,7 +34,7 @@ function hFig = plot_wds_4( ...
 %       % Suppose s.edges.node_idx = {[1 2],[2 3],[1 3]};
 %       % edge_vals = [0.2;0.8;0.5];
 %       % edge_vels = [ 1; -0.5; 0 ];
-%       plot_wds_3(s,1,1,1, edge_vals, edge_vels, 2, 'Weight', 0, 1);
+%       plot_wds_4(s,1,1,1, edge_vals, edge_vels, 2, 'Weight', 0, 1);
 %
 %   Notes:
 %     • If all entries of edge_vals are equal, colormap collapses to single color.
@@ -47,7 +47,7 @@ function hFig = plot_wds_4( ...
     % 1) INPUT CHECKS
     % -------------------------------------------------------------------------
     if nargin < 10
-        error(['plot_wds_3 requires ten inputs: ', ...
+        error(['plot_wds_4 requires ten inputs: ', ...
                '(s, add_nodes, add_node_labels, add_edge_labels, edge_vals, ', ...
                'edge_vels, fignum, ylabel_text, vmin, vmax).']);
     end
@@ -63,22 +63,27 @@ function hFig = plot_wds_4( ...
     % -------------------------------------------------------------------------
     % 2) CREATE FIGURE & SETUP
     % -------------------------------------------------------------------------
-    hFig = figure(fignum);
+    hFig = figure%(fignum);
     clf(hFig);
     hold on;
     axis equal;
     
-    cmap = jet(256);
+    cmap = [0.678, 0.847, 0.902;   % light blue (RGB ~ powderblue)
+        1.0,   0.0,   0.0];   % strong red
+cmap=colormap(interp1([0 1], cmap, linspace(0,1,256)));
+
+
+%    cmap = jet(256);
     
     % Normalize edge_vals into indices [1..256]
-    if vmax > vmin
-        scaled = round( (edge_vals - vmin) ./ (vmax - vmin) * 255 ) + 1;
-        scaled(scaled < 1)   = 1;
-        scaled(scaled > 256) = 256;
-    else
-        % all edge_vals identical → pick middle index
-        scaled = ones(M,1) * 128;
-    end
+%    if vmax > vmin
+%        scaled = round( (edge_vals - vmin) ./ (vmax - vmin) * 255 ) + 1;
+%        scaled(scaled < 1)   = 1;
+%        scaled(scaled > 256) = 256;
+%    else
+%        % all edge_vals identical → pick middle index
+%        scaled = ones(M,1) * 128;
+%    end
 
     % -------------------------------------------------------------------------
     % 3) PLOT EACH EDGE (LINE + OPTIONAL EDGE‐ID + CENTERED ARROW)
@@ -88,14 +93,21 @@ function hFig = plot_wds_4( ...
         ni = idx_pair(1);
         nj = idx_pair(2);
 
-        x_i = s.nodes.X(ni);
-        y_i = s.nodes.Y(ni);
-        x_j = s.nodes.X(nj);
-        y_j = s.nodes.Y(nj);
+        x_i = s.nodes.X(ni)/1000;
+        y_i = s.nodes.Y(ni)/1000;
+        x_j = s.nodes.X(nj)/1000;
+        y_j = s.nodes.Y(nj)/1000;
 
         % 3a) Choose edge color from colormap
-        cidx = scaled(i);
-        edge_color = cmap(cidx, :);
+        %cidx = scaled(i);
+        %edge_color = cmap(cidx, :);
+        tcol = (edge_vals(i) - vmin) / (vmax - vmin);
+tcol = max(0, min(1, tcol));   % clamp if outside
+
+% Map normalized value to an index in colormap
+idx = round( 1 + tcol*(size(cmap,1)-1) );
+edge_color = cmap(idx,:);
+
 
         % 3b) Draw the line for this edge
         plot([x_i, x_j], [y_i, y_j], '-', ...
@@ -191,10 +203,12 @@ function hFig = plot_wds_4( ...
     % -------------------------------------------------------------------------
     % 5) ADD COLORBAR FOR EDGE‐VALUE → COLOR MAPPING
     % -------------------------------------------------------------------------
+        
     colormap(cmap);
     cb = colorbar;
     caxis([vmin, vmax]);
     ylabel(cb, ylabel_text);
 
+    title(title_text)
     hold off;
 end
