@@ -13,10 +13,6 @@ function hFig = plot_wds_4( ...
  s.nodes.X= s.nodes.X/1000;
  s.nodes.Y= s.nodes.Y/1000;
 
- dx_max=max(s.nodes.X)-min(s.nodes.X);
-    dy_max=max(s.nodes.Y)-min(s.nodes.Y);
-    offset = 0.01*max(dx_max,dy_max);
-
 % -------------------------------------------------------------------------
 % 1) INPUT CHECKS
 % -------------------------------------------------------------------------
@@ -40,8 +36,11 @@ end
 hFig = figure%(fignum);
 clf(hFig);
 hold on;
+%
+xlim([0.9*min(s.nodes.X) 1.1*max(s.nodes.X)])
+ylim([0.9*min(s.nodes.Y) 1.1*max(s.nodes.Y)])
 
-%axis equal;
+axis equal;
 
 cmap = [0.678, 0.847, 0.902;   % light blue (RGB ~ powderblue)
     1.0,   0.0,   0.0];   % strong red
@@ -78,7 +77,6 @@ for i = 1:M
         'LineWidth', 1.5);
 
     % 3c) If requested, place the edge ID at the (offset) midpoint
-   
     if add_edge_labels == 1
         xm = 0.5*(x_i + x_j);
         ym = 0.5*(y_i + y_j);
@@ -86,14 +84,14 @@ for i = 1:M
         dy_e = y_j - y_i;
         L_e = hypot(dx_e, dy_e);
         if L_e > 0
-            
+            off = 0.02;
             ux_p = -dy_e / L_e;
             uy_p =  dx_e / L_e;
         else
             ux_p = 0; uy_p = 0;
         end
-        text( xm + offset*ux_p, ...
-            ym + offset*uy_p, ...
+        text( xm + off*ux_p, ...
+            ym + off*uy_p, ...
             s.edges.ID{i}, ...
             'FontSize', 9, ...
             'HorizontalAlignment', 'center', ...
@@ -151,19 +149,18 @@ end
 % 4) PLOT NODES (optional) AND NODE LABELS (optional)
 % -------------------------------------------------------------------------
 if add_nodes == 1
-    scatter(s.nodes.X, s.nodes.Y, 60, 'ko');
+    scatter(s.nodes.X, s.nodes.Y, 60, 'ro', 'filled');
 end
 
 if add_node_labels == 1
     for k = 1:numel(s.nodes.ID)
-        text( s.nodes.X(k)-offset/2, ...
-            s.nodes.Y(k)+offset/2, ...
+        text( s.nodes.X(k), ...
+            s.nodes.Y(k), ...
             sprintf('%s', s.nodes.ID{k}), ...
             'VerticalAlignment',   'bottom', ...
             'HorizontalAlignment', 'right',  ...
             'FontSize',           10, ...
-            'Interpreter', 'none',...
-            'FontAngle', 'italic');
+            'Interpreter', 'none');
     end
 end
 
@@ -175,7 +172,8 @@ colormap(cmap);
 cb = colorbar;
 caxis([vmin, vmax]);
 ylabel(cb, ylabel_text);
-xlim([0 11])
+
+
 
 title(title_text)
 hold off;
