@@ -41,7 +41,6 @@ hFig = figure%(fignum);
 clf(hFig);
 hold on;
 
-%axis equal;
 
 cmap = [0.678, 0.847, 0.902;   % light blue (RGB ~ powderblue)
     1.0,   0.0,   0.0];   % strong red
@@ -143,7 +142,7 @@ for i = 1:M
             'Color',       edge_color, ...
             'LineWidth',   1.5, ...
             'MaxHeadSize', 2.0, ...
-            'AutoScale',   'off');
+            'AutoScale',   'on');
     end
 end
 
@@ -167,6 +166,9 @@ if add_node_labels == 1
     end
 end
 
+
+
+
 % -------------------------------------------------------------------------
 % 5) ADD COLORBAR FOR EDGE‐VALUE → COLOR MAPPING
 % -------------------------------------------------------------------------
@@ -179,4 +181,5 @@ xlim([0 11])
 
 title(title_text)
 hold off;
+
 end
